@@ -1,0 +1,8 @@
+# Compiled source #
+###################
+*.exe
+*.save
+*.o
+
+# Input File #
+*.txt
