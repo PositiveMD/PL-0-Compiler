@@ -10,9 +10,19 @@
 
 int main(int argc, char *argv[]){
 
-char cmd;
-scanf("%c", &cmd);
+    char cmd[];
+    scanf("%s %s %s", &cmd[1], &cmd[2], &cmd[3]);
 
+    int i = 0;
+    for (i <= 2)
+    {
 
-return 0;
+    }
+
+    else
+    {
+        printf("ERROR: Invalid Command\n");
+    }
+
+    return 0;
 }
