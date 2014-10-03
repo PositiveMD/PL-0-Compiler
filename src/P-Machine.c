@@ -17,7 +17,7 @@ void fetch()
 }
 
 //Finds the base L levels down
-int base(l, base) // l stands for L in the instruction format
+int base(int l, int base) // l stands for L in the instruction format
 {
     int bl; //find base L levels down
     bl = base;
