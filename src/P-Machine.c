@@ -30,6 +30,7 @@ static instruction IR;
 static int BP;
 static int SP;
 static int PC;
+static int OLD_PC;
 static int HALT;
 
 
@@ -38,6 +39,7 @@ void fetch()
 {
 
     IR = code[PC];
+    OLD_PC = PC;
     PC++;
 }
 
@@ -76,7 +78,7 @@ void OPRFinder()
         //Subtraction
         case 3:
             SP--;
-            stack[SP] = stack[SP] - stack[SP - 1];
+            stack[SP] = stack[SP] - stack[SP + 1];
             break;
         //Multiplication
         case 4:
@@ -95,7 +97,7 @@ void OPRFinder()
         //Mod
         case 7:
             SP--;
-            stack[SP] = stack[SP] % stack[SP + 1];    
+            stack[SP] = stack[SP] % stack[SP + 1];
             break;
         //Equality
         case 8:
@@ -191,12 +193,12 @@ const char * opcodeFinder(int opcode)
 }
 
 //Outputs the current variables and  etc
-void outputStack(FILE *ofp, int count)
+void outputStack(FILE *ofp)
 {
     int i;
 
     //Prints everything except the stack
-    fprintf(ofp, "%d\t%s\t%d\t%d\t%d\t%d\t%d\t", count, opcodeFinder(IR.op), IR.l, IR.m, PC, BP, SP );
+    fprintf(ofp, "%d\t%s\t%d\t%d\t%d\t%d\t%d\t", OLD_PC, opcodeFinder(IR.op), IR.l, IR.m, PC, BP, SP );
 
     //Does not print the stack if SP == 0
     if (SP != 0)
@@ -273,7 +275,8 @@ void execute()
             HALT = 0;
             break;
         default:
-            printf("Something went wrong with the execution function");
+            printf("Something went wrong with the execution function\n");
+            printf("%d",IR.op);
             exit(1);
 
 
@@ -296,6 +299,7 @@ int main(int argc, char *argv[])
     BP = 1;
     SP = 0;
     PC = 0;
+    OLD_PC = 0;
 
     //Checks to see if the file exists
     if (!(access( "mcode.txt", F_OK ) != -1)){
@@ -315,18 +319,22 @@ int main(int argc, char *argv[])
          if (feof(ifp))
             break;
 
-        
         i++;
-        length++;
 
     }
 
-    
+    i = 0;
+    while (code[i].op != 0)
+        i++;
+
+    length = i;
+
     fprintf(ofp, "line\tOP\tL\tM\n");
 
-    for (i = 0; i <length; i++){
-        //printf("%d %d %d\n", code[i].op, code[i].l, code[i].m);
+    for (i = 0; i < length; i++){
+        
         fprintf(ofp, "%d\t%s\t%d\t%d\n", i, opcodeFinder(code[i].op) , code[i].l, code[i].m);
+        //printf("i = %d length = %d\n", i, length);
 
     }
 
@@ -341,15 +349,14 @@ int main(int argc, char *argv[])
     memset(stack,0,sizeof(int)*MAX_STACK_HEIGHT);
     memset(bar,0,sizeof(int)*MAX_STACK_HEIGHT);
 
-    i = 0;
 
     //THe Program runs while the base pointer is not equal to 0 and the Halt flag is true
     while(BP!=0 && HALT){
 
         fetch();
         execute();
-        outputStack(ofp,i);
-        i++;
+        outputStack(ofp);
+     
     }
 
 
