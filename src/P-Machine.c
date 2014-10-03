@@ -7,30 +7,6 @@ Assignment 1 : P-Machine (VM)
 
 #include "CompilerDriver.h"
 
-#define MAX_STACK_HEIGHT 2000
-#define MAX_CODE_LENGTH 500
-#define MAX_LEXI_LEVELS 3
-
-
-
-typedef struct instruction{
-    int op; // opcode
-    int l;  // L
-    int m;   // M
-}instruction;
-
-static int stack[MAX_STACK_HEIGHT];
-static int bar[MAX_STACK_HEIGHT];
-static instruction code[MAX_CODE_LENGTH];
-
-static instruction IR;
-static int BP;
-static int SP;
-static int PC;
-static int OLD_PC;
-static int HALT;
-
-
 //Fetches the next instruction from the code array
 void fetch()
 {
