@@ -6,9 +6,8 @@ September 21th 2014
 Assignment 2 : Lexical Analyzer
 */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
+#include "CompilerDriver.h"
+
 
 typedef enum {
     nulsym = 1, identsym, numbersym, plussym, minussym, multsym,

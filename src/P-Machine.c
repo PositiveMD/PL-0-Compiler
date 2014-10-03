@@ -5,10 +5,7 @@ September 8th 2014
 Assignment 1 : P-Machine (VM)
 */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
+#include "CompilerDriver.h"
 
 #define MAX_STACK_HEIGHT 2000
 #define MAX_CODE_LENGTH 500
