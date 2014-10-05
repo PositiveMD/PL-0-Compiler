@@ -65,7 +65,7 @@ void removeComments(FILE *ifp, FILE *ofp1, FILE *ofp2, int printLex);
 void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3);
 
 //Starts the Scanner
-int startScanner(int printLex);
+void startScanner(int printLex);
 
 
 #define COMPILERDRIVER
