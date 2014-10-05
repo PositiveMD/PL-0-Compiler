@@ -31,19 +31,19 @@ int main(int argc, char *argv[]){
         if (strcmp(argv[i],"l") == 0){
 
             printLex = 1;
-            return;
+            continue;
         }
 
         if (strcmp(argv[i], "a") == 0){
 
             printPars = 1;
-            return;
+            continue;
         }
 
         if (strcmp(argv[i], "v") == 0){
 
             printStack = 1;
-            return;
+            continue;
         }
 
         else {
