@@ -260,7 +260,7 @@ void execute()
 
 
 
-int startPMachine(int printStack)
+void startPMachine(int printStack)
 {
 
     int i = 0;
