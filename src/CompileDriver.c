@@ -10,6 +10,18 @@
 
 int main(int argc, char *argv[]){
 
+
+    int temp, temp2;
+    
+
+    //Checks to see if the file exists
+    if (!(access( "input.txt", F_OK ) != -1)){
+        printf("input.txt does not exist in the current directory\n");
+        exit(0);
+    }
+
+
+/*
     char cmd[];
     scanf("%s %s %s", &cmd[1], &cmd[2], &cmd[3]);
 
@@ -22,7 +34,7 @@ int main(int argc, char *argv[]){
     else
     {
         printf("ERROR: Invalid Command\n");
-    }
+    }*/
 
     return 0;
 }
