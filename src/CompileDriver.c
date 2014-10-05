@@ -28,19 +28,19 @@ int main(int argc, char *argv[]){
     //Checks to see what arguments are passed
     for (i = 0; i < argc; i++){
 
-        if (stringcmp(argv[i],"l") == 0){
+        if (strcmp(argv[i],"l") == 0){
 
             printLex = 1;
             return;
         }
 
-        if (stringcmp(argv[i], "a") == 0){
+        if (strcmp(argv[i], "a") == 0){
 
             printPars = 1;
             return;
         }
 
-        if (stringcmp(argv[i], 'v') == 0){
+        if (strcmp(argv[i], 'v') == 0){
 
             printStack = 1;
             return;
