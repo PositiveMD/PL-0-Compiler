@@ -43,6 +43,7 @@ void removeComments(FILE *ifp, FILE *ofp1, FILE *ofp4)
             putc(temp, ofp4);
         }
     }
+    fprintf(ofp4, "\n");
     fclose(ifp);
     fclose (ofp1);
 
@@ -63,7 +64,7 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex)
 
 
     fprintf(ofp2, "lexeme\ttoken type\n");
-    fprintf(ofp4, "lexeme\ttoken type\n");
+    
 
     while ((temp = getc(ifp)) != EOF){
 
@@ -535,7 +536,7 @@ void startScanner(int printLex)
     ofp1 = fopen("cleaninput.txt", "w");
     ofp2 = fopen("lexemetable.txt", "w");
     ofp3 = fopen("lexemelist.txt", "w");
-    ofp4 = fopen("output.txt", "a");
+    ofp4 = fopen("output.txt", "w");
 
     removeComments(ifp, ofp1, ofp4);
 
