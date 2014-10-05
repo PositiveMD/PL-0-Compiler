@@ -364,7 +364,7 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex)
             fprintf(ofp4, "%d ", rparentsym);
 
             if (printLex)
-                printf("%d ", rparentsym)
+                printf("%d ", rparentsym);
         }
 
         else if (temp == '='){
