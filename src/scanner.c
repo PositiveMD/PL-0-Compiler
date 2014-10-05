@@ -9,7 +9,7 @@ Assignment 2 : Lexical Analyzer
 #include "CompilerDriver.h"
 
 //Removes the comments from the input file and moves it the a commentless input file
-void removeComments(FILE *ifp, FILE *ofp1)
+void removeComments(FILE *ifp, FILE *ofp1, FILE *ofp4)
 {
     int temp, temp2;
 
@@ -22,11 +22,15 @@ void removeComments(FILE *ifp, FILE *ofp1)
             if ( temp != '*'){
                 putc('/', ofp1);
                 putc(temp, ofp1);
+
+                putc('/', ofp4);
+                putc(temp, ofp4);
             }
 
             else {
 
                 fprintf(ofp1, " ");
+                fprintf(ofp4, " ");
                 do{
                     temp2 = temp;
                     temp = getc(ifp);
@@ -34,8 +38,10 @@ void removeComments(FILE *ifp, FILE *ofp1)
             }
         }
 
-        else
+        else{
             putc(temp, ofp1);
+            putc(temp, ofp4);
+        }
     }
     fclose(ifp);
     fclose (ofp1);
@@ -385,17 +391,18 @@ void startScanner(int printLex)
     }
 
     //Used to open input and output files
-    FILE *ifp, *ofp1, *ofp2, *ofp3;
+    FILE *ifp, *ofp1, *ofp2, *ofp3, *ofp4;
     ifp = fopen("input.txt", "r");
     ofp1 = fopen("cleaninput.txt", "w");
     ofp2 = fopen("lexemetable.txt", "w");
     ofp3 = fopen("lexemelist.txt", "w");
+    ofp4 = fopen("output.txt", "a");
 
-    removeComments(ifp, ofp1);
+    removeComments(ifp, ofp1, ofp4);
 
     //We read from the comment stripped input file now
     ifp = fopen("cleaninput.txt", "r");
 
-    convertToToken(ifp, ofp2, ofp3);
+    convertToToken(ifp, ofp2, ofp3, ofp4);
 
 }

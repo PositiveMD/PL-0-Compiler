@@ -59,10 +59,10 @@ void outputStack(FILE *ofp);
 void execute();
 
 //Removes the comments from the input file and moves it the a commentless input file
-void removeComments(FILE *ifp, FILE *ofp1);
+void removeComments(FILE *ifp, FILE *ofp1, FILE *ofp4);
 
 //Takes the clean input file and converts it into tokens
-void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3);
+void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4);
 
 //Starts the Scanner
 void startScanner(int printLex);

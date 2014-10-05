@@ -48,7 +48,7 @@ int main(int argc, char *argv[]){
 
         else {
 
-            printf("Invalid argument: %s %d\n", argv[i], i );
+            printf("Invalid argument: %s \nArgument number: %d\n", argv[i], i );
 
             
         }
