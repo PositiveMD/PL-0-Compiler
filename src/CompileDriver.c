@@ -28,19 +28,19 @@ int main(int argc, char *argv[]){
     //Checks to see what arguments are passed
     for (i = 0; i < argc; i++){
 
-        if (argv[i] == 'l'){
+        if ((stringcmp(argv[i],"l") == 0) {
 
             printLex = 1;
             return;
         }
 
-        if (argv[i] == 'a'){
+        if ((stringcmp(argv[i], "a") == 0) {
 
             printPars = 1;
             return;
         }
 
-        if (argv[i] == 'v'){
+        if ((stringcmp(argv[i], 'v') == 0){
 
             printStack = 1;
             return;
@@ -48,7 +48,7 @@ int main(int argc, char *argv[]){
 
         else {
 
-            printf("Invalid argument: %c", argv[i]);
+            printf("Invalid argument: %s", argv[i]);
 
             
         }
