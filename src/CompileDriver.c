@@ -10,9 +10,8 @@
 
 int main(int argc, char *argv[]){
 
+    FILE *ifp, *ofp1, *ofp2, *ofp3, *ofp4;
 
-    int temp, temp2;
-    
 
     //Checks to see if the file exists
     if (!(access( "input.txt", F_OK ) != -1)){
@@ -20,21 +19,19 @@ int main(int argc, char *argv[]){
         exit(0);
     }
 
+    ifp = fopen("input.txt", "r");
+    ofp1 = fopen("output.txt", "w");
+    ofp2 = fopen("cleaninput.txt", "w");
+    ofp3 = fopen("lexemetable.txt", "w");
+    ofp4 = fopen("lexemelist.txt", "w");
 
-/*
-    char cmd[];
-    scanf("%s %s %s", &cmd[1], &cmd[2], &cmd[3]);
+    if (argc )
 
-    int i = 0;
-    for (i <= 2)
-    {
 
-    }
 
-    else
-    {
-        printf("ERROR: Invalid Command\n");
-    }*/
+
+
+
 
     return 0;
 }

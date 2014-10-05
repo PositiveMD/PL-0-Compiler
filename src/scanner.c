@@ -378,9 +378,6 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3){
 int main(int argc, char *argv[])
 {
 
-    int temp, temp2;
-    int numLength;
-
     //Checks to see if the file exists
     if (!(access( "input.txt", F_OK ) != -1)){
         printf("input.txt does not exist in the current directory\n");
