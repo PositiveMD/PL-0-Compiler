@@ -67,6 +67,9 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3);
 //Starts the Scanner
 void startScanner(int printLex);
 
+//Starts the PMachine
+void startPMachine(int printStack);
+
 
 #define COMPILERDRIVER
 #endif

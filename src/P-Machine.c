@@ -260,7 +260,7 @@ void execute()
 
 
 
-int main(int argc, char *argv[])
+int startPMachine(int printStack)
 {
 
     int i = 0;
@@ -335,5 +335,5 @@ int main(int argc, char *argv[])
 
 
     fclose(ofp);
-    return 0;
+  
 }
