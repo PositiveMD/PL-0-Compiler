@@ -296,6 +296,10 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex)
                 ungetc(temp, ifp);
                 fprintf(ofp2, "%d\t%d\n", value, numbersym);
                 fprintf(ofp3, "%d %d ",numbersym, value);
+                fprintf(ofp4, "%d %d ",numbersym, value);
+
+                if (printLex)
+                    printf("%d %d ",numbersym, value);
             }
 
 
@@ -307,54 +311,90 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex)
 
            fprintf(ofp2, "+\t%d\n", plussym);
            fprintf(ofp3, "%d ", plussym);
+           fprintf(ofp4, "%d ", plussym);
+
+           if (printLex)
+            printf("%d ", plussym);
         }
 
         else if (temp == '-'){
 
             fprintf(ofp2, "-\t%d\n", minussym);
             fprintf(ofp3, "%d ", minussym);
+            fprintf(ofp4, "%d ", minussym);
+
+            if (printLex)
+                printf("%d ", minussym);
         }
 
         else if (temp == '*'){
 
             fprintf(ofp2, "*\t%d\n", multsym);
             fprintf(ofp3, "%d ", multsym);
+            fprintf(ofp4, "%d ", multsym);
+
+            if (printLex)
+                printf("%d ", multsym);
         }
 
         else if (temp == '/'){
 
             fprintf(ofp2, "/\t%d\n", slashsym);
             fprintf(ofp3, "%d ", slashsym);
+            fprintf(ofp4, "%d ", slashsym);
+
+            if (printLex)
+                printf("%d ", slashsym);
         }
 
         else if (temp == '('){
 
             fprintf(ofp2, "(\t%d\n", lparentsym);
             fprintf(ofp3, "%d ", lparentsym);
+            fprintf(ofp4, "%d ", lparentsym);
+
+            if (printLex)
+                printf("%d ", lparentsym);
         }
 
         else if (temp == ')'){
 
             fprintf(ofp2, ")\t%d\n", rparentsym);
             fprintf(ofp3, "%d ", rparentsym);
+            fprintf(ofp4, "%d ", rparentsym);
+
+            if (printLex)
+                printf("%d ", rparentsym)
         }
 
         else if (temp == '='){
 
             fprintf(ofp2, "=\t%d\n", eqsym);
             fprintf(ofp3, "%d ", eqsym);
+            fprintf(ofp4, "%d ", eqsym);
+
+            if (printLex)
+                printf("%d ", eqsym);
         }
 
         else if (temp == ','){
 
             fprintf(ofp2, ",\t%d\n", commasym);
             fprintf(ofp3, "%d ", commasym);
+            fprintf(ofp4, "%d ", commasym);
+
+            if (printLex)
+                printf("%d ", commasym);
         }
 
         else if (temp == '.'){
 
             fprintf(ofp2, ".\t%d\n", periodsym);
             fprintf(ofp3, "%d ", periodsym);
+            fprintf(ofp4, "%d ", periodsym);
+
+            if (printLex)
+                printf("%d ", periodsym );
         }
 
         else if (temp == '<'){
@@ -365,18 +405,31 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex)
 
                 fprintf(ofp2, "<=\t%d\n", leqsym);
                 fprintf(ofp3, "%d ", leqsym);
+                fprintf(ofp4, "%d ", leqsym);
+
+                if (printLex)
+                    printf("%d ", leqsym);
             }
 
             else if (temp == '>'){
 
                 fprintf(ofp2, "<>\t%d\n", neqsym);
                 fprintf(ofp3, "%d ", neqsym);
+                fprintf(ofp4, "%d ", neqsym);
+
+                if (printLex)
+                    printf("%d ", neqsym);
+
             }
 
             else{
 
                 fprintf(ofp2, "<\t%d\n", lessym);
                 fprintf(ofp3, "%d ", lessym);
+                fprintf(ofp4, "%d ", lessym);
+
+                if (printLex)
+                    printf("%d ", lessym);
                 
 
             }
@@ -392,6 +445,10 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex)
 
                 fprintf(ofp2, ">=\t%d\n",geqsym);
                 fprintf(ofp3, "%d ", geqsym);
+                fprintf(ofp4, "%d ", geqsym);
+
+                if (printLex)
+                    printf("%d ", geqsym);
             }
 
             else{
@@ -399,6 +456,10 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex)
                 ungetc(temp, ifp);
                 fprintf(ofp2, ">\t%d\n", gtrsym);
                 fprintf(ofp3, "%d ", gtrsym);
+                fprintf(ofp4, "%d ", gtrsym);
+
+                if (printLex)
+                    printf("%d ", geqsym);
 
             }
 
@@ -408,6 +469,10 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex)
 
             fprintf(ofp2, ";\t%d\n", semicolonsym);
             fprintf(ofp3, "%d ", semicolonsym);
+            fprintf(ofp4, "%d ", semicolonsym);
+
+            if (printLex)
+                printf("%d ", semicolonsym );
         }
 
         else if (temp == ':'){
@@ -417,6 +482,10 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex)
             if (temp == '='){
                 fprintf(ofp2, ":=\t%d\n", becomessym);
                 fprintf(ofp3, "%d ", becomessym);
+                fprintf(ofp4, "%d ", becomessym);
+
+                if (printLex)
+                    printf("%d ",becomessym);
             }
 
             else {
@@ -443,6 +512,7 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex)
     fclose(ifp);
     fclose(ofp2);
     fclose(ofp3);
+    fclose(ofp4);
 
 
 }
