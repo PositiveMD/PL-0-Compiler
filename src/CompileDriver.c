@@ -40,7 +40,7 @@ int main(int argc, char *argv[]){
             return;
         }
 
-        if (strcmp(argv[i], 'v') == 0){
+        if (strcmp(argv[i], "v") == 0){
 
             printStack = 1;
             return;
