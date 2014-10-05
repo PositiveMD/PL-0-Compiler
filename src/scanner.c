@@ -49,7 +49,7 @@ void removeComments(FILE *ifp, FILE *ofp1, FILE *ofp4)
 }
 
 //Takes the clean input file and converts it into tokens
-void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3){
+void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex){
 
     int temp;
     int count;
@@ -63,6 +63,7 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3){
 
 
     fprintf(ofp2, "lexeme\ttoken type\n");
+    fprintf(ofp4, "lexeme\ttoken type\n");
 
     while ((temp = getc(ifp)) != EOF){
 
@@ -99,6 +100,10 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3){
 
                 fprintf(ofp2, "%s\t%d\n", charBuffer, identsym);
                 fprintf(ofp3, "%d %s ", identsym, charBuffer );
+                fprintf(ofp4, "%d %s ", identsym, charBuffer );
+
+                if (printLex)
+                    printf("%d %s ", identsym, charBuffer);
             }
 
             //Checks to see if the word is equivalent to the const key word
@@ -106,83 +111,140 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3){
 
                 fprintf(ofp2, "const\t%d\n", constsym);
                 fprintf(ofp3, "%d ", constsym);
+                fprintf(ofp4, "%d ", constsym);
+
+                if (printLex)
+                    printf("%d ", constsym);
             }
 
             else if (strcmp(charBuffer, "var") == 0){
 
                 fprintf(ofp2, "var\t%d\n", varsym);
                 fprintf(ofp3, "%d ", varsym);
+                fprintf(ofp4, "%d ", varsym);
+
+                if (printLex)
+                    printf("%d ", varsym);
+
             }
 
             else if (strcmp(charBuffer, "procedure") == 0){
 
                 fprintf(ofp2, "procedure\t%d\n", procsym);
                 fprintf(ofp3, "%d ", procsym);
+                fprintf(ofp4, "%d ", procsym);
+
+                if (printLex)
+                    printf("%d ", procsym);
             }
 
             else if (strcmp(charBuffer, "call") ==0){
 
                 fprintf(ofp2, "call\t%d\n", callsym);
                 fprintf(ofp3, "%d ", callsym);
+                fprintf(ofp4, "%d ", callsym);
+
+                if (printLex)
+                    printf("%d ", callsym);
             }
 
             else if (strcmp(charBuffer, "begin") == 0){
 
                 fprintf(ofp2, "begin\t%d\n", beginsym);
                 fprintf(ofp3, "%d ", beginsym);
+                fprintf(ofp4, "%d ", beginsym);
+
+                if (printLex)
+                    printf("%d ", beginsym);
             }
 
             else if (strcmp(charBuffer, "end") == 0){
 
                 fprintf(ofp2, "end\t%d\n", endsym);
                 fprintf(ofp3, "%d ", endsym);
+                fprintf(ofp4, "%d ", endsym);
+
+                if (printLex)
+                    printf("%d ", endsym);
             }
 
             else if (strcmp(charBuffer, "if") == 0){
 
                 fprintf(ofp2, "if\t%d\n", ifsym);
                 fprintf(ofp3, "%d ", ifsym );
+                fprintf(ofp4, "%d ", ifsym);
+
+                if (printLex)
+                    printf("%d ", ifsym);
             }
 
             else if (strcmp(charBuffer, "then") == 0){
                 fprintf(ofp2, "then\t%d\n", thensym);
                 fprintf(ofp3, "%d ",thensym );
+                fprintf(ofp4, "%d ",thensym );
+
+                if (printLex)
+                    printf("%d ", thensym );
             }
 
             else if (strcmp(charBuffer, "else") == 0){
 
                 fprintf(ofp2, "else\t%d\n", elsesym );
                 fprintf(ofp3, "%d ", elsesym);
+                fprintf(ofp4, "%d ", elsesym );
+
+                if (printLex)
+                    printf("%d ", elsesym);
             }
 
             else if (strcmp(charBuffer, "while") == 0){
 
                 fprintf(ofp2, "while\t%d\n", whilesym );
                 fprintf(ofp3, "%d ",whilesym );
+                fprintf(ofp4, "%d ",whilesym );
+
+                if (printLex)
+                    printf("%d ", whilesym);
             }
 
             else if (strcmp(charBuffer, "do") == 0){
 
                 fprintf(ofp2, "do\t%d\n", dosym);
                 fprintf(ofp3, "%d ",dosym );
+                fprintf(ofp4, "%d ",dosym );
+
+                if (printLex)
+                    printf("%d ", dosym);
             }
 
             else if (strcmp(charBuffer, "read") == 0){
 
                 fprintf(ofp2, "read\t%d\n", readsym );
                 fprintf(ofp3, "%d ", readsym );
+                fprintf(ofp4, "%d ", readsym );
+
+                if (printLex)
+                    printf("%d ", readsym);
             }
 
             else if (strcmp(charBuffer, "write") == 0){
 
                 fprintf(ofp2, "write\t%d\n", writesym );
                 fprintf(ofp3, "%d ", writesym );
+                fprintf(ofp4, "%d ", writesym );
+
+                if (printLex)
+                    printf("%d ", writesym);
             }
 
             else if (strcmp(charBuffer, "odd") == 0){
 
                 fprintf(ofp2, "odd\t%d\n", oddsym );
                 fprintf(ofp3, "%d ", oddsym );
+                fprintf(ofp4, "%d ", oddsym);
+
+                if (printLex)
+                    printf("%d ", oddsym);
             }
 
             //The candidate is not a keyword, so we can just print it to the output file.
@@ -190,6 +252,10 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3){
 
                 fprintf(ofp2, "%s\t%d\n", charBuffer, identsym);
                 fprintf(ofp3, "%d %s ", identsym, charBuffer );
+                fprintf(ofp4, "%d %s ", identsym, charBuffer );
+
+                if (printLex)
+                    printf("%d %s ", identsym, charBuffer );
 
             }
 
@@ -403,6 +469,6 @@ void startScanner(int printLex)
     //We read from the comment stripped input file now
     ifp = fopen("cleaninput.txt", "r");
 
-    convertToToken(ifp, ofp2, ofp3, ofp4);
+    convertToToken(ifp, ofp2, ofp3, ofp4, printLex);
 
 }

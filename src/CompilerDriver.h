@@ -62,7 +62,7 @@ void execute();
 void removeComments(FILE *ifp, FILE *ofp1, FILE *ofp4);
 
 //Takes the clean input file and converts it into tokens
-void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4);
+void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex);
 
 //Starts the Scanner
 void startScanner(int printLex);
