@@ -375,7 +375,7 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3){
 
 }
 
-int main(int argc, char *argv[])
+void startScanner(int printLex)
 {
 
     //Checks to see if the file exists
@@ -398,7 +398,4 @@ int main(int argc, char *argv[])
 
     convertToToken(ifp, ofp2, ofp3);
 
-
-
-    return 0;
 }
