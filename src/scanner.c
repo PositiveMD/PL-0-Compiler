@@ -510,7 +510,7 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex)
 
     }
 
-    fprintf(ofp4, "\n");
+    fprintf(ofp4, "\n\n");
     printf("\n");
 
     fclose(ifp);

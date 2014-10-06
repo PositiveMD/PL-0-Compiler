@@ -57,6 +57,10 @@ int main(int argc, char *argv[]){
 
     startScanner(printLex);
 
+    //Start Parser Code
+
+    startPMachine(printStack);
+
 
 
 
