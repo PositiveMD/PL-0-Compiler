@@ -166,25 +166,42 @@ const char * opcodeFinder(int opcode)
 }
 
 //Outputs the current variables and  etc
-void outputStack(FILE *ofp)
+void outputStack(FILE *ofp, FILE *ofp2, int printStack)
 {
     int i;
 
     //Prints everything except the stack
     fprintf(ofp, "%d\t%s\t%d\t%d\t%d\t%d\t%d\t", OLD_PC, opcodeFinder(IR.op), IR.l, IR.m, PC, BP, SP );
+    fprintf(ofp2, "%d\t%s\t%d\t%d\t%d\t%d\t%d\t", OLD_PC, opcodeFinder(IR.op), IR.l, IR.m, PC, BP, SP );
+
+    if (printStack)
+        printf("%d\t%s\t%d\t%d\t%d\t%d\t%d\t", OLD_PC, opcodeFinder(IR.op), IR.l, IR.m, PC, BP, SP );
 
     //Does not print the stack if SP == 0
-    if (SP != 0)
-    {
+    if (SP != 0){
+
         //Prints the bar separating the AR
         for (i = 1; i<=SP; i++){
-            if (bar[i] && i != 1)
+
+            if (bar[i] && i != 1){
+
                 fprintf(ofp, "| ");
+                fprintf(ofp2, "| ");
+
+                if (printStack)
+                    printf("| ");
+            }
+
             fprintf(ofp, "%d ", stack[i]);
+            fprintf(ofp2, "%d ", stack[i]);
+
+            if (printStack)
+                printf("%d ", stack[i]);
         }
     }
 
     fprintf(ofp, "\n");
+    fprintf(ofp2, "\n");
 }
 
 void execute()
@@ -281,9 +298,10 @@ void startPMachine(int printStack)
     }
 
     //Open the input file, and the output file
-    FILE *ifp, *ofp;
+    FILE *ifp, *ofp, *ofp2;
     ifp = fopen("mcode.txt", "r");
     ofp = fopen("stacktrace.txt", "w");
+    ofp2 = fopen("output.txt", "a");
 
     while (1){
 
@@ -303,16 +321,32 @@ void startPMachine(int printStack)
     length = i;
 
     fprintf(ofp, "line\tOP\tL\tM\n");
+    fprintf(ofp2, "line\tOP\tL\tM\n");
+
+    if (printStack)
+        printf("line\tOP\tL\tM\n");
 
     for (i = 0; i < length; i++){
         
-        fprintf(ofp, "%d\t%s\t%d\t%d\n", i, opcodeFinder(code[i].op) , code[i].l, code[i].m);
-        //printf("i = %d length = %d\n", i, length);
+        fprintf(ofp, "%d\t%s\t%d\t%d\n", i, opcodeFinder(code[i].op), code[i].l, code[i].m);
+        fprintf(ofp2, "%d\t%s\t%d\t%d\n", i, opcodeFinder(code[i].op), code[i].l, code[i].m );
+
+        if (printStack)
+            printf("%d\t%s\t%d\t%d\n", i, opcodeFinder(code[i].op), code[i].l, code[i].m);
 
     }
 
     fprintf(ofp, "\t\t\t\tPC\tBP\tSP\tstack\n");
     fprintf(ofp, "Initial values\t\t\t%d\t%d\t%d\n", PC, BP, SP );
+
+    fprintf(ofp2, "\t\t\t\tPC\tBP\tSP\tstack\n");
+    fprintf(ofp2, "Initial values\t\t\t%d\t%d\t%d\n", PC, BP, SP );
+
+    if (printStack){
+
+        printf("\t\t\t\tPC\tBP\tSP\tstack\n");
+        printf("Initial values\t\t\t%d\t%d\t%d\n", PC, BP, SP );
+    }
 
 
     //We close the file now that we are done using it
@@ -328,12 +362,13 @@ void startPMachine(int printStack)
 
         fetch();
         execute();
-        outputStack(ofp);
+        outputStack(ofp, ofp2, printStack);
      
     }
 
 
 
     fclose(ofp);
+    fclose(ofp2);
   
 }

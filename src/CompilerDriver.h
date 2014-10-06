@@ -53,7 +53,7 @@ void OPRFINDER();
 const char * opcodeFinder(int opcode);
 
 //Outputs the current variables and  etc
-void outputStack(FILE *ofp);
+void outputStack(FILE *ofp, FILE *ofp2, int printStack);
 
 //Executes the P-Machine
 void execute();
