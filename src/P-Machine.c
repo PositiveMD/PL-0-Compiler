@@ -202,6 +202,9 @@ void outputStack(FILE *ofp, FILE *ofp2, int printStack)
 
     fprintf(ofp, "\n");
     fprintf(ofp2, "\n");
+
+    if (printStack)
+        printf("\n");
 }
 
 void execute()
@@ -322,6 +325,8 @@ void startPMachine(int printStack)
 
     fprintf(ofp, "line\tOP\tL\tM\n");
     fprintf(ofp2, "line\tOP\tL\tM\n");
+
+    printf("\n");
 
     if (printStack)
         printf("line\tOP\tL\tM\n");
