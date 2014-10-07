@@ -6,7 +6,23 @@ September 21th 2014
 Assignment 2 : Lexical Analyzer
 */
 
-#include "CompilerDriver.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX_NUM_LENGTH 5
+#define MAX_IDENT_LENGTH 11
+
+//The enums with all the token types
+typedef enum {
+    nulsym = 1, identsym, numbersym, plussym, minussym, multsym,
+    slashsym, oddsym, eqsym, neqsym, lessym, leqsym, gtrsym, geqsym,
+    lparentsym, rparentsym, commasym, semicolonsym, periodsym, becomessym,
+    beginsym, endsym, ifsym, thensym, whilesym, dosym, callsym, constsym,
+    varsym, procsym, writesym, readsym, elsesym
+} token_types;
 
 //Removes the comments from the input file and moves it the a commentless input file
 void removeComments(FILE *ifp, FILE *ofp1, FILE *ofp4)
@@ -521,8 +537,10 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex)
 
 }
 
-void startScanner(int printLex)
+void main(int argc, char *argv[])
 {
+
+    int printLex = 0;
 
     //Checks to see if the file exists
     if (!(access( "input.txt", F_OK ) != -1)){

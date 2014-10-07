@@ -5,7 +5,34 @@ September 8th 2014
 Assignment 1 : P-Machine (VM)
 */
 
-#include "CompilerDriver.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX_STACK_HEIGHT 2000
+#define MAX_CODE_LENGTH 500
+#define MAX_LEXI_LEVELS 3
+
+
+typedef struct instruction{
+    int op; // opcode
+    int l;  // L
+    int m;   // M
+}instruction;
+
+
+static int stack[MAX_STACK_HEIGHT];
+static int bar[MAX_STACK_HEIGHT];
+static instruction code[MAX_CODE_LENGTH];
+
+static instruction IR;
+static int BP;
+static int SP;
+static int PC;
+static int OLD_PC;
+static int HALT;
 
 //Fetches the next instruction from the code array
 void fetch()
@@ -280,8 +307,10 @@ void execute()
 
 
 
-void startPMachine(int printStack)
+void main(int argc, char *argv[])
 {
+
+    int printStack = 0;
 
     int i = 0;
     int length = 0;
@@ -326,6 +355,7 @@ void startPMachine(int printStack)
     fprintf(ofp, "line\tOP\tL\tM\n");
     fprintf(ofp2, "line\tOP\tL\tM\n");
 
+    
 
     if (printStack)
         printf("line\tOP\tL\tM\n");

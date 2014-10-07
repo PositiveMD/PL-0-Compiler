@@ -6,7 +6,11 @@
 * Assignment 3 : Tiny PL/0 Parser and Code Generator
 */
 
-#include "CompilerDriver.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 
 int main(int argc, char *argv[]){
 
@@ -55,11 +59,11 @@ int main(int argc, char *argv[]){
 
     }
 
-    startScanner(printLex);
+    System(scanner);
 
     //Start Parser Code
 
-    startPMachine(printStack);
+    System(P-Machine);
 
 
 
