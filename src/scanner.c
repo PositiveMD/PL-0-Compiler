@@ -557,6 +557,8 @@ int main(int argc, char *argv[])
 
             printLex = 1;
             continue;
+
+            
         }
 
         else {

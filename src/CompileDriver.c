@@ -61,11 +61,11 @@ int main(int argc, char *argv[]){
 
     }
 
-	 system("./scanner");
+	 continueExecution = (printLex == 1) ? system("scanner.exe -l") : system("scanner.exe");
 
     //Start Parser Code
-
-     system("./P-Machine");
+     if (!continueExecution)
+        continueExecution = (printStack == 1) ? system("P-Machine.exe -v") : system("P-Machine.exe");
 
 
 
