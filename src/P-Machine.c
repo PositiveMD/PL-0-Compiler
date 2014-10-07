@@ -307,7 +307,7 @@ void execute()
 
 
 
-void main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 
     int printStack = 0;
@@ -315,6 +315,36 @@ void main(int argc, char *argv[])
     int i = 0;
     int length = 0;
 
+    //Checks to see if the number of arguments is correct
+    if (argc > 2){
+
+        printf("Invalid number of arguments: %d", argc);
+
+        exit(0);
+    }
+
+    //Checks to see what arguments are passed
+    for (i = 1; i < argc; i++){
+
+        if (strcmp(argv[i],"-v") == 0){
+
+            printStack = 1;
+            continue;
+        }
+
+        else {
+
+            printf("Invalid argument: %s \nArgument number: %d\n", argv[i], i );
+
+
+        }
+
+    }
+
+    
+
+    i = 0;
+  
     //Program ends when HALT is false
     HALT = 1;
 
@@ -404,5 +434,7 @@ void main(int argc, char *argv[])
 
     fclose(ofp);
     fclose(ofp2);
+
+    return 0;
   
 }

@@ -4,4 +4,8 @@ Alvin Lam
 COP 3402 : System Software
 */
 
-#include "CompilerDrive.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>

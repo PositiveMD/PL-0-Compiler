@@ -21,6 +21,8 @@ int main(int argc, char *argv[]){
     int printPars = 0;
     int printStack = 0;
 
+    int continueExecution = 1;
+
     //Checks to see if the number of arguments is correct
     if (argc > 4){
 
@@ -54,16 +56,17 @@ int main(int argc, char *argv[]){
 
             printf("Invalid argument: %s \nArgument number: %d\n", argv[i], i );
 
-            
+
         }
 
     }
 
-    System(scanner);
+    continueExecution = system("scanner.exe");
 
     //Start Parser Code
 
-    System(P-Machine);
+    if (!continueExecution)
+        continueExecution = system("P-Machine.exe");
 
 
 

@@ -537,10 +537,36 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex)
 
 }
 
-void main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
-
+    int i;
     int printLex = 0;
+
+    //Checks to see if the number of arguments is correct
+    if (argc > 2){
+
+        printf("Invalid number of arguments: %d", argc);
+
+        exit(0);
+    }
+
+    //Checks to see what arguments are passed
+    for (i = 1; i < argc; i++){
+
+        if (strcmp(argv[i],"-l") == 0){
+
+            printLex = 1;
+            continue;
+        }
+
+        else {
+
+            printf("Invalid argument: %s \nArgument number: %d\n", argv[i], i );
+
+
+        }
+
+    }
 
     //Checks to see if the file exists
     if (!(access( "input.txt", F_OK ) != -1)){
@@ -562,5 +588,7 @@ void main(int argc, char *argv[])
     ifp = fopen("cleaninput.txt", "r");
 
     convertToToken(ifp, ofp2, ofp3, ofp4, printLex);
+
+    return 0;
 
 }
