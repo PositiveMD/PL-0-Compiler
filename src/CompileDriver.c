@@ -61,12 +61,11 @@ int main(int argc, char *argv[]){
 
     }
 
-    continueExecution = system("scanner.exe");
+	 system("./scanner");
 
     //Start Parser Code
 
-    if (!continueExecution)
-        continueExecution = system("P-Machine.exe");
+     system("./P-Machine");
 
 
 
