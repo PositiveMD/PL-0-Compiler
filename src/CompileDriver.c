@@ -12,6 +12,16 @@
 #include <string.h>
 #include <ctype.h>
 
+#ifdef _WIN32
+
+    #define IS_WINDOWS 1    
+
+#else
+
+    #define IS_WINDOWS 0
+
+#endif
+
 int main(int argc, char *argv[]){
 
     int i;
@@ -61,11 +71,31 @@ int main(int argc, char *argv[]){
 
     }
 
-	 continueExecution = (printLex == 1) ? system("scanner.exe -l") : system("scanner.exe");
+    if (IS_WINDOWS){
 
-    //Start Parser Code
-     if (!continueExecution)
-        continueExecution = (printStack == 1) ? system("P-Machine.exe -v") : system("P-Machine.exe");
+        continueExecution = (printLex == 1) ? system("scanner.exe -l") : system("scanner.exe");
+
+        //Start Parser Code
+
+        if (!continueExecution)
+            continueExecution = (printStack == 1) ? system("P-Machine.exe -v") : system("P-Machine.exe");
+    }
+
+    else {
+
+
+        continueExecution = (printLex == 1) ? system("./scanner -l") : system("./scanner");
+
+        //Start Parser Code
+
+        if (!continueExecution)
+            continueExecution = (printStack == 1) ? system("./P-Machine -v") : system("P-Machine");
+    }
+	   
+
+    
+      
+        
 
 
 

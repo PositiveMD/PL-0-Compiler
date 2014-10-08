@@ -320,7 +320,7 @@ int main(int argc, char *argv[])
 
         printf("Invalid number of arguments: %d", argc);
 
-        exit(0);
+        exit(1);
     }
 
     //Checks to see what arguments are passed
@@ -335,6 +335,7 @@ int main(int argc, char *argv[])
         else {
 
             printf("Invalid argument: %s \nArgument number: %d\n", argv[i], i );
+            exit(1);
 
 
         }
@@ -356,7 +357,7 @@ int main(int argc, char *argv[])
     //Checks to see if the file exists
     if (!(access( "mcode.txt", F_OK ) != -1)){
         printf("mcode.txt does not exist in the current directory\n");
-        exit(0);
+        exit(1);
     }
 
     //Open the input file, and the output file
