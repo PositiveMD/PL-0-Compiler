@@ -46,11 +46,6 @@ typedef enum {
 char token[MAX_TOKEN_SIZE];
 
 
-void convertToMCode()
-{
-
-}
-
 //Prints the machine code to the file
 void emit(int opCode, int level, int m, FILE *ofp, FILE *ofp2, int printPars)
 {
@@ -59,6 +54,18 @@ void emit(int opCode, int level, int m, FILE *ofp, FILE *ofp2, int printPars)
 
     if (printPars)
         fprintf(ofp2, "%d %d %d\n", opCode, level, m);
+
+}
+
+void getToken(FILE *ifp)
+{
+    if (feof(ifp)){
+
+        printf("We have reached the end of the file\n");
+        exit(1);
+    }
+
+    fscanf(ifp, "%s", &token);
 
 }
 
@@ -152,6 +159,48 @@ void printError(int errorCode)
     }
 }
 
+void constDeclaration()
+{
+
+}
+
+void varDeclaration()
+{
+    
+}
+
+void block(FILE *ifp, FILE *ofp, FILE *ofp2, int printPars)
+{
+    char *temp;
+
+    if (strcmp(token, itoa(constsym, temp, 10)) == 0)
+        constDeclaration();
+
+    if (strcmp(token, itoa(varsym, temp, 10)) == 0)
+        varDeclaration();
+
+    //If Token = procedure
+
+}
+
+
+void convertToMCode(FILE *ifp, FILE *ofp, FILE *ofp2, int printPars)
+{
+
+    char *temp;
+
+    getToken(ifp);
+    
+
+    block(ifp, ofp, ofp2, printPars);
+
+    if (strcmp(token, itoa(periodsym, temp, 10)) != 0)
+        printError(9);
+
+}
+
+
+
 int main(int argc, char *argv[])
 {
 
@@ -202,6 +251,7 @@ int main(int argc, char *argv[])
     ofp2 = fopen("output.txt", "a");
 
 
+    convertToMCode(ifp,ofp,ofp2,printPars);
 
     fclose(ifp);
     fclose(ofp);
