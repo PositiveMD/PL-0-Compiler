@@ -12,6 +12,8 @@
 #include <string.h>
 #include <ctype.h>
 
+
+//Checks to see if the environment is windows or not
 #ifdef _WIN32
 
     #define IS_WINDOWS 1    

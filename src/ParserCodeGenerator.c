@@ -12,6 +12,14 @@ COP 3402 : System Software
 
 #define MAX_SYMBOL_TABLE_SIZE 100
 
+/*
+Constants must store kind, name, and value
+
+Variables must store kind, name, L, and M
+
+Procedures must store kind, name, L, and M
+
+*/
 typedef struct symbol
 {
     int kind;       //const = 1 , var = 2, proc = 3
@@ -21,6 +29,30 @@ typedef struct symbol
     int addr;       //M address
 } symbol;
 
+//The enums with all the token types
+typedef enum {
+    nulsym = 1, identsym, numbersym, plussym, minussym, multsym,
+    slashsym, oddsym, eqsym, neqsym, lessym, leqsym, gtrsym, geqsym,
+    lparentsym, rparentsym, commasym, semicolonsym, periodsym, becomessym,
+    beginsym, endsym, ifsym, thensym, whilesym, dosym, callsym, constsym,
+    varsym, procsym, writesym, readsym, elsesym
+} token_types;
+
+typedef enum {
+    LIT = 1, OPR, LOD, STO, CAL, INC, JMP, JPC, SIO
+} op_code_types;
+
+
+//Prints the machine code to the file
+void emit(int opCode, int level, int m, FILE *ofp, FILE *ofp2, int printPars)
+{
+
+    fprintf(ofp, "%d %d %d\n", opCode, level, m);
+
+    if (printPars)
+        fprintf(ofp2, "%d %d %d\n", opCode, level, m);
+
+}
 
 void printError(int errorCode)
 {
@@ -120,6 +152,8 @@ int main(int argc, char *argv[])
 
     FILE *ifp, *ofp, *ofp2;
 
+    symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
+
 	 //Checks to see if the number of arguments is correct
     if (argc > 2){
 
@@ -159,10 +193,9 @@ int main(int argc, char *argv[])
     ofp = fopen("mcode.txt", "w");
     ofp2 = fopen("output.txt", "a");
 
-
-
-
-
+    fclose(ifp);
+    fclose(ofp);
+    fclose(ofp2);
 
 	return 0;
 }
