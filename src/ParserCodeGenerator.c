@@ -16,6 +16,8 @@ int main(int argc, char *argv[])
 	int i;
 	int printPars = 0;
 
+    FILE *ifp, *ofp, *ofp2;
+
 	 //Checks to see if the number of arguments is correct
     if (argc > 2){
 
@@ -43,6 +45,21 @@ int main(int argc, char *argv[])
         }
 
     }
+
+    //Checks to see if the file exists
+    if (!(access( "lexemelist.txt", F_OK ) != -1)){
+        printf("input.txt does not exist in the current directory\n");
+        exit(1);
+    }
+
+
+    ifp = fopen("lexemelist.txt", "r");
+    ofp = fopen("mcode.txt", "w");
+    ofp2 = fopen("output.txt", "a");
+
+    
+
+
 
 	return 0;
 }
