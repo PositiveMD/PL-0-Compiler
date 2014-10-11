@@ -11,6 +11,7 @@ COP 3402 : System Software
 #include <ctype.h>
 
 #define MAX_SYMBOL_TABLE_SIZE 100
+#define MAX_TOKEN_SIZE 12
 
 /*
 Constants must store kind, name, and value
@@ -18,7 +19,6 @@ Constants must store kind, name, and value
 Variables must store kind, name, L, and M
 
 Procedures must store kind, name, L, and M
-
 */
 typedef struct symbol
 {
@@ -38,10 +38,18 @@ typedef enum {
     varsym, procsym, writesym, readsym, elsesym
 } token_types;
 
+//The enums with all the opCode types
 typedef enum {
     LIT = 1, OPR, LOD, STO, CAL, INC, JMP, JPC, SIO
 } op_code_types;
 
+char token[MAX_TOKEN_SIZE];
+
+
+void convertToMCode()
+{
+
+}
 
 //Prints the machine code to the file
 void emit(int opCode, int level, int m, FILE *ofp, FILE *ofp2, int printPars)
@@ -192,6 +200,8 @@ int main(int argc, char *argv[])
     ifp = fopen("lexemelist.txt", "r");
     ofp = fopen("mcode.txt", "w");
     ofp2 = fopen("output.txt", "a");
+
+
 
     fclose(ifp);
     fclose(ofp);
