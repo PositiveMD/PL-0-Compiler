@@ -10,6 +10,17 @@ COP 3402 : System Software
 #include <string.h>
 #include <ctype.h>
 
+#define MAX_SYMBOL_TABLE_SIZE 100
+
+typedef struct symbol
+{
+    int kind;       //const = 1 , var = 2, proc = 3
+    char name[12];  //name up to 11 chars
+    int val;        //number (ASCII value)
+    int level;      //L Level
+    int addr;       //M address
+} symbol;
+
 
 void printError(int errorCode)
 {
@@ -97,9 +108,6 @@ void printError(int errorCode)
         default:
             printf("Something broke in the error printer: %d ", errorCode);
             exit(1);
-
-
-
 
     }
 }
