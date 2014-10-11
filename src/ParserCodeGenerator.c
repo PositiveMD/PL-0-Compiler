@@ -10,6 +10,100 @@ COP 3402 : System Software
 #include <string.h>
 #include <ctype.h>
 
+
+void printError(int errorCode)
+{
+
+    printf("Error %d: ", errorCode);
+
+    //Prints the error based on the error code, then exits the program
+    switch(errorCode){
+
+        case 1:
+            printf("Use = instead of :=.");
+            exit(1);
+        case 2:
+            printf("= must be followed by a number.");
+            exit(1);
+        case 3:
+            printf("Identifier must be followed by =.");
+            exit(1);
+        case 4:
+            printf("const, var, procedure must be followed by identifier.");
+            exit(1);
+        case 5:
+            printf("Semicolon or comma missing.");
+            exit(1);
+        case 6:
+            printf("Incorrect sumbol after procedure declaration.");
+            exit(1);
+        case 7:
+            printf("Statement expected.");
+            exit(1);
+        case 8:
+            printf("Incorrect symbol after statement part in block.");
+            exit(1);
+        case 9:
+            printf("Period expected.");
+            exit(1);
+        case 10:
+            printf("Semicolon between statements missing.");
+            exit(1);
+        case 11:
+            printf("Undeclared identifier.");
+            exit(1);
+        case 12:
+            printf("Assignment to constant or procedure is not allowed.");
+            exit(1);
+        case 13:
+            printf("Assignment operator expected.");
+            exit(1);
+        case 14:
+            printf("call mus be followed by an identifier.");
+            exit(1);
+        case 15:
+            printf("Call of a constant or variable is meaningless.");
+            exit(1);
+        case 16:
+            printf("then expected.");
+            exit(1);
+        case 17:
+            printf("Semicolon or } expetected.");
+            exit(1);
+        case 18:
+            printf("do expected.");
+            exit(1);
+        case 19:
+            printf("Incorrect symbol following statement.");
+            exit(1);
+        case 20:
+            printf("Relational operator expected.");
+            exit(1);
+        case 21:
+            printf("Expression must not contain a procedure identifier.");
+            exit(1);
+        case 22:
+            printf("Right parenthesis missing.");
+            exit(1);
+        case 23:
+            printf("The preceding factor cannot begin with this symbol.");
+            exit(1);
+        case 24:
+            printf("The expression cannot begin with this symbol.");
+            exit(1);
+        case 25:
+            printf("This number is too large.");
+            exit(1);
+        default:
+            printf("Something broke in the error printer: %d ", errorCode);
+            exit(1);
+
+
+
+
+    }
+}
+
 int main(int argc, char *argv[])
 {
 
@@ -57,7 +151,8 @@ int main(int argc, char *argv[])
     ofp = fopen("mcode.txt", "w");
     ofp2 = fopen("output.txt", "a");
 
-    
+
+
 
 
 
