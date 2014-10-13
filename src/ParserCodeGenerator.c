@@ -38,12 +38,19 @@ typedef enum {
     varsym, procsym, writesym, readsym, elsesym
 } token_types;
 
+typedef enum{
+
+    CONSTANT = 1, VARIABLE, PROCEDURE
+} symbol_table_type;
+
 //The enums with all the opCode types
 typedef enum {
     LIT = 1, OPR, LOD, STO, CAL, INC, JMP, JPC, SIO
 } op_code_types;
 
-char token[MAX_TOKEN_SIZE];
+static char token[MAX_TOKEN_SIZE];
+static symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
+static int symbolTableCount;
 
 
 //Prints the machine code to the file
@@ -159,12 +166,72 @@ void printError(int errorCode)
     }
 }
 
-void constDeclaration()
-{
+
+//Adds a new value to the symbol table
+void addToSymbolTable(int type, char *identifier, int param){
+
+    symbolTable[symbolTableCount].kind = type;
+    strcpy(symbolTable[symbolTableCount].name, identifier);
+
+    if (type == 1)
+        symbolTable[symbolTableCount].val = param;
+
+    else {
+        symbolTable[symbolTableCount].addr = param;
+        symbolTable[symbolTableCount].level = 0;
+    }
+
+
 
 }
 
-void varDeclaration()
+
+//Declares a constant
+void constDeclaration(FILE *ifp)
+{
+    char *temp;
+    char *constName;
+
+    int value;
+
+    do{
+
+        getToken(ifp);
+
+        if (strcmp(token, itoa(identsym, temp, 10)) != 0)
+            printError(4);
+
+        getToken(ifp);
+
+        strcpy(constName, token);
+
+        getToken(ifp);
+
+        if (strcmp(token, itoa(eqsym, temp, 10)) != 0)
+            printError(3);
+
+        getToken(ifp);
+
+        if (strcmp(token, itoa(numbersym, temp, 10)) != 0)
+            printError(2);
+
+        getToken(ifp);
+
+        value = atoi(token);
+
+        addToSymbolTable(CONSTANT, constName, value);
+
+        getToken(ifp);
+        
+    }while(strcmp(token, itoa(commasym, temp, 10)) == 0);
+
+
+
+
+
+}
+
+void varDeclaration(FILE *ifp)
 {
     
 }
@@ -174,10 +241,10 @@ void block(FILE *ifp, FILE *ofp, FILE *ofp2, int printPars)
     char *temp;
 
     if (strcmp(token, itoa(constsym, temp, 10)) == 0)
-        constDeclaration();
+        constDeclaration(ifp);
 
     if (strcmp(token, itoa(varsym, temp, 10)) == 0)
-        varDeclaration();
+        varDeclaration(ifp);
 
     //If Token = procedure
 
@@ -207,9 +274,11 @@ int main(int argc, char *argv[])
 	int i;
 	int printPars = 0;
 
+    symbolTableCount = 0;
+
     FILE *ifp, *ofp, *ofp2;
 
-    symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
+    
 
 	 //Checks to see if the number of arguments is correct
     if (argc > 2){
