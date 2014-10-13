@@ -162,6 +162,9 @@ void printError(int errorCode)
         case 26:
             printf("Declaration must end with ;");
             exit(1);
+        case 27:
+            printf("begin must be closed with end");
+            exit(1);
         default:
             printf("Something broke in the error printer: %d ", errorCode);
             exit(1);
@@ -272,9 +275,83 @@ void varDeclaration(FILE *ifp)
     
 }
 
+void evaluateExpression(FILE *ifp)
+{
+    char *temp;
+}
+
+
+void evaluateCondition(FILE *ifp)
+{
+
+}
+
+
 void executeBody(FILE *ifp)
 {
     char *temp;
+
+    if (strcmp(token, itoa(identsym, temp, 10)) == 0){
+
+        getToken(ifp);
+
+        if (strcmp(token, itoa(becomessym, temp , 10)) != 0)
+            printError(13);
+
+        getToken(ifp);
+
+        evaluateExpression(ifp);
+    }
+
+    //else if (TOKEN = call)
+
+    else if (strcmp(token, itoa(beginsym, temp, 10)) == 0){
+
+        getToken(ifp);
+
+        executeBody(ifp);
+
+        while (strcmp(token, itoa(semicolonsym, temp, 10)) == 0){
+
+            getToken(ifp);
+            executeBody(ifp);
+        }
+
+        if (strcmp(token, itoa(endsym, temp, 10)) != 0)
+            printError(27);
+
+        getToken(ifp);
+
+
+    }
+
+    else if (strcmp(token, itoa(ifsym, temp, 10)) == 0){
+
+        getToken(ifp);
+
+        evaluateCondition(ifp);
+
+        if (strcmp(token, itoa(thensym, temp, 10)) != 0)
+            printError(16);
+
+        getToken(ifp);
+
+        executeBody(ifp);
+    }
+
+    else if (strcmp(token, itoa(whilesym, temp, 10)) == 0){
+
+        getToken(ifp);
+
+        evaluateCondition(ifp);
+
+        if (strcmp(token, itoa(dosym, temp, 10 )) != 0)
+            printError(18);
+
+        getToken(ifp);
+
+        executeBody(ifp);
+    }
 
 
 }
