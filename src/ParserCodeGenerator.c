@@ -165,6 +165,7 @@ void printError(int errorCode)
         case 27:
             printf("begin must be closed with end");
             exit(1);
+
         default:
             printf("Something broke in the error printer: %d ", errorCode);
             exit(1);
@@ -244,6 +245,49 @@ void constDeclaration(FILE *ifp)
 
 }
 
+void factor(FILE * ifp)
+{
+    char *temp;
+
+    if (strcmp(token, itoa(identsym, temp, 10)) == 0)
+        getToken(ifp);
+
+    else if (strcmp(token, itoa(numbersym, temp, 10)) == 0)
+        getToken(ifp);
+
+    else if (strcmp(token, itoa(lparentsym, temp, 10)) == 0){
+
+        getToken(ifp);
+        evaluateExpression(ifp);
+
+        if (strcmp(token, itoa(rparentsym, temp, 10)) != 0)
+            printError(22);
+
+        getToken(ifp);
+    }
+
+    else
+        printError(23);
+
+
+
+}
+
+void term(FILE *ifp)
+{
+
+    char *temp;
+
+    factor(ifp);
+
+    while (strcmp(token, itoa(multsym, temp, 10)) == 0 || strcmp(token, itoa(slashsym, temp, 10)) == 0){
+        getToken(ifp);
+        factor(ifp);
+    }
+    
+}
+
+
 void varDeclaration(FILE *ifp)
 {
 
@@ -283,7 +327,12 @@ void evaluateExpression(FILE *ifp)
 
         getToken(ifp);
         term(ifp);
+    }
 
+    while (strcmp(token, itoa(plussym, temp, 10)) == 0 || strcmp(token, itoa(minussym, temp, 10)) == 0){
+
+        getToken(ifp);
+        term(ifp);
     }
 }
 
@@ -317,6 +366,7 @@ void evaluateCondition(FILE *ifp)
     }
 
 }
+
 
 
 void executeBody(FILE *ifp)
