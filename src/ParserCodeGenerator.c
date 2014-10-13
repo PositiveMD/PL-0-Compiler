@@ -207,7 +207,7 @@ void constDeclaration(FILE *ifp)
 
         getToken(ifp);
 
-        if (strcmp(token, itoa(identsym, temp, 10)) != 0)
+        if (strcmp(token, sprintf(temp, "%d", identsym)) != 0)
             printError(4);
 
         getToken(ifp);
@@ -216,12 +216,12 @@ void constDeclaration(FILE *ifp)
 
         getToken(ifp);
 
-        if (strcmp(token, itoa(eqsym, temp, 10)) != 0)
+        if (strcmp(token, sprintf(temp, "%d", eqsym)) != 0)
             printError(3);
 
         getToken(ifp);
 
-        if (strcmp(token, itoa(numbersym, temp, 10)) != 0)
+        if (strcmp(token, sprintf(temp, "%d", numbersym)) != 0)
             printError(2);
 
         getToken(ifp);
@@ -232,9 +232,9 @@ void constDeclaration(FILE *ifp)
 
         getToken(ifp);
 
-    }while(strcmp(token, itoa(commasym, temp, 10)) == 0);
+    }while(strcmp(token, sprintf(temp, "%d", commasym)) == 0);
 
-    if (strcmp(token, itoa(semicolonsym, temp, 10)) != 0)
+    if (strcmp(token, sprintf(temp, "%d", semicolonsym)) != 0)
         printError(26);
 
     getToken(ifp);
@@ -249,18 +249,18 @@ void factor(FILE * ifp)
 {
     char *temp;
 
-    if (strcmp(token, itoa(identsym, temp, 10)) == 0)
+    if (strcmp(token, sprintf(temp, "%d", identsym)) == 0)
         getToken(ifp);
 
-    else if (strcmp(token, itoa(numbersym, temp, 10)) == 0)
+    else if (strcmp(token, sprintf(temp, "%d", numbersym)) == 0)
         getToken(ifp);
 
-    else if (strcmp(token, itoa(lparentsym, temp, 10)) == 0){
+    else if (strcmp(token, sprintf(temp, "%d", lparentsym)) == 0){
 
         getToken(ifp);
         evaluateExpression(ifp);
 
-        if (strcmp(token, itoa(rparentsym, temp, 10)) != 0)
+        if (strcmp(token, sprintf(temp, "%d", rparentsym)) != 0)
             printError(22);
 
         getToken(ifp);
@@ -280,7 +280,7 @@ void term(FILE *ifp)
 
     factor(ifp);
 
-    while (strcmp(token, itoa(multsym, temp, 10)) == 0 || strcmp(token, itoa(slashsym, temp, 10)) == 0){
+    while (strcmp(token, sprintf(temp, "%d", multsym)) == 0 || strcmp(token, sprintf(temp, "%d", slashsym)) == 0){
         getToken(ifp);
         factor(ifp);
     }
@@ -298,7 +298,7 @@ void varDeclaration(FILE *ifp)
 
         getToken(ifp);
 
-        if (strcmp(token, itoa(identsym, temp, 10)) != 0)
+        if (strcmp(token, sprintf(temp, "%d", identsym)) != 0)
             printError(4);
 
         getToken(ifp);
@@ -310,9 +310,9 @@ void varDeclaration(FILE *ifp)
         getToken(ifp);
 
 
-    }while(strcmp(token, itoa(commasym, temp, 10)) == 0);
+    }while(strcmp(token, sprintf(temp, "%d", commasym)) == 0);
 
-    if (strcmp(token, itoa(semicolonsym, temp, 10)) != 0)
+    if (strcmp(token, sprintf(temp, "%d", semicolonsym)) != 0)
         printError(26);
 
     getToken(ifp);
@@ -323,13 +323,13 @@ void evaluateExpression(FILE *ifp)
 {
     char *temp;
 
-    if (strcmp(token, itoa(plussym, temp, 10)) == 0 || strcmp(token, itoa(minussym, temp, 10)) == 0){
+    if (strcmp(token, sprintf(temp, "%d", plussym)) == 0 || strcmp(token, sprintf(temp, "%d", minussym)) == 0){
 
         getToken(ifp);
         term(ifp);
     }
 
-    while (strcmp(token, itoa(plussym, temp, 10)) == 0 || strcmp(token, itoa(minussym, temp, 10)) == 0){
+    while (strcmp(token, sprintf(temp, "%d", plussym)) == 0 || strcmp(token, sprintf(temp, "%d", minussym)) == 0){
 
         getToken(ifp);
         term(ifp);
@@ -341,7 +341,7 @@ void evaluateCondition(FILE *ifp)
 {
     char *temp;
 
-    if (strcmp(token, itoa(oddsym, temp, 10)) == 0){
+    if (strcmp(token, sprintf(temp, "%d", oddsym)) == 0){
 
         getToken(ifp);
         evaluateExpression(ifp);
@@ -352,9 +352,9 @@ void evaluateCondition(FILE *ifp)
 
         evaluateExpression(ifp);
 
-        if (strcmp(token, itoa(eqsym, temp, 10)) != 0 || strcmp(token, itoa(neqsym,temp,10 )) !=0 || 
-            strcmp(token, itoa(lessym, temp, 10)) != 0 || strcmp(token, itoa(leqsym,temp ,10)) != 0 ||
-            strcmp(token, itoa(gtrsym, temp, 10)) != 0 || strcmp(token, itoa(geqsym,temp, 10)) !=0 ) 
+        if (strcmp(token, sprintf(temp, "%d", eqsym)) != 0 || strcmp(token, sprintf(temp,"%d",neqsym )) !=0 || 
+            strcmp(token, sprintf(temp, "%d", lessym)) != 0 || strcmp(token, sprintf(temp,"%d" ,leqsym)) != 0 ||
+            strcmp(token, sprintf(temp, "%d", gtrsym)) != 0 || strcmp(token, sprintf(temp,"%d", geqsym)) !=0 ) 
             printError(20);
 
         getToken(ifp);
@@ -373,11 +373,11 @@ void executeBody(FILE *ifp)
 {
     char *temp;
 
-    if (strcmp(token, itoa(identsym, temp, 10)) == 0){
+    if (strcmp(token, sprintf(temp , "%d", identsym)) == 0){
 
         getToken(ifp);
 
-        if (strcmp(token, itoa(becomessym, temp , 10)) != 0)
+        if (strcmp(token, sprintf(temp, "%d" , becomessym)) != 0)
             printError(13);
 
         getToken(ifp);
@@ -387,19 +387,19 @@ void executeBody(FILE *ifp)
 
     //else if (TOKEN = call)
 
-    else if (strcmp(token, itoa(beginsym, temp, 10)) == 0){
+    else if (strcmp(token, sprintf(temp, "%d", beginsym)) == 0){
 
         getToken(ifp);
 
         executeBody(ifp);
 
-        while (strcmp(token, itoa(semicolonsym, temp, 10)) == 0){
+        while (strcmp(token, sprintf(temp, "%d", semicolonsym)) == 0){
 
             getToken(ifp);
             executeBody(ifp);
         }
 
-        if (strcmp(token, itoa(endsym, temp, 10)) != 0)
+        if (strcmp(token, sprintf(temp, "%d", endsym)) != 0)
             printError(27);
 
         getToken(ifp);
@@ -407,13 +407,13 @@ void executeBody(FILE *ifp)
 
     }
 
-    else if (strcmp(token, itoa(ifsym, temp, 10)) == 0){
+    else if (strcmp(token, sprintf(temp, "%d", ifsym)) == 0){
 
         getToken(ifp);
 
         evaluateCondition(ifp);
 
-        if (strcmp(token, itoa(thensym, temp, 10)) != 0)
+        if (strcmp(token, sprintf(temp, "%d", thensym)) != 0)
             printError(16);
 
         getToken(ifp);
@@ -421,13 +421,13 @@ void executeBody(FILE *ifp)
         executeBody(ifp);
     }
 
-    else if (strcmp(token, itoa(whilesym, temp, 10)) == 0){
+    else if (strcmp(token, sprintf(temp, "%d", whilesym)) == 0){
 
         getToken(ifp);
 
         evaluateCondition(ifp);
 
-        if (strcmp(token, itoa(dosym, temp, 10 )) != 0)
+        if (strcmp(token, sprintf(temp, "%d", dosym )) != 0)
             printError(18);
 
         getToken(ifp);
@@ -442,10 +442,10 @@ void block(FILE *ifp, FILE *ofp, FILE *ofp2, int printPars)
 {
     char *temp;
 
-    if (strcmp(token, itoa(constsym, temp, 10)) == 0)
+    if (strcmp(token, sprintf(temp, "%d", constsym)) == 0)
         constDeclaration(ifp);
 
-    if (strcmp(token, itoa(varsym, temp, 10)) == 0)
+    if (strcmp(token, sprintf(temp, "%d", varsym)) == 0)
         varDeclaration(ifp);
 
     //If Token = procedure
@@ -467,7 +467,7 @@ void convertToMCode(FILE *ifp, FILE *ofp, FILE *ofp2, int printPars)
 
     block(ifp, ofp, ofp2, printPars);
 
-    if (strcmp(token, itoa(periodsym, temp, 10)) != 0)
+    if (strcmp(token, sprintf(temp, "%d", periodsym)) != 0)
         printError(9);
 
 }
