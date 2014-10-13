@@ -124,7 +124,7 @@ void printError(int errorCode)
             printf("Assignment operator expected.");
             exit(1);
         case 14:
-            printf("call mus be followed by an identifier.");
+            printf("call must be followed by an identifier.");
             exit(1);
         case 15:
             printf("Call of a constant or variable is meaningless.");
@@ -133,7 +133,7 @@ void printError(int errorCode)
             printf("then expected.");
             exit(1);
         case 17:
-            printf("Semicolon or } expetected.");
+            printf("Semicolon or } expected.");
             exit(1);
         case 18:
             printf("do expected.");
@@ -159,6 +159,9 @@ void printError(int errorCode)
         case 25:
             printf("This number is too large.");
             exit(1);
+        case 26:
+            printf("Declaration must end with ;");
+            exit(1);
         default:
             printf("Something broke in the error printer: %d ", errorCode);
             exit(1);
@@ -177,9 +180,11 @@ void addToSymbolTable(int type, char *identifier, int param){
         symbolTable[symbolTableCount].val = param;
 
     else {
-        symbolTable[symbolTableCount].addr = param;
+        //symbolTable[symbolTableCount].addr = param;
         symbolTable[symbolTableCount].level = 0;
     }
+
+    symbolTableCount++;
 
 
 
@@ -222,8 +227,13 @@ void constDeclaration(FILE *ifp)
         addToSymbolTable(CONSTANT, constName, value);
 
         getToken(ifp);
-        
+
     }while(strcmp(token, itoa(commasym, temp, 10)) == 0);
+
+    if (strcmp(token, itoa(semicolonsym, temp, 10)) != 0)
+        printError(26);
+
+    getToken(ifp);
 
 
 
@@ -233,7 +243,40 @@ void constDeclaration(FILE *ifp)
 
 void varDeclaration(FILE *ifp)
 {
+
+    char *temp;
+    char *varName;
+
+    do{
+
+        getToken(ifp);
+
+        if (strcmp(token, itoa(identsym, temp, 10)) != 0)
+            printError(4);
+
+        getToken(ifp);
+
+        strcpy(varName, token);
+
+        addToSymbolTable(VARIABLE, varName, 0);
+
+        getToken(ifp);
+
+
+    }while(strcmp(token, itoa(commasym, temp, 10)) == 0);
+
+    if (strcmp(token, itoa(semicolonsym, temp, 10)) != 0)
+        printError(26);
+
+    getToken(ifp);
     
+}
+
+void executeBody(FILE *ifp)
+{
+    char *temp;
+
+
 }
 
 void block(FILE *ifp, FILE *ofp, FILE *ofp2, int printPars)
@@ -247,6 +290,10 @@ void block(FILE *ifp, FILE *ofp, FILE *ofp2, int printPars)
         varDeclaration(ifp);
 
     //If Token = procedure
+
+    executeBody(ifp);
+
+
 
 }
 
