@@ -278,11 +278,38 @@ void varDeclaration(FILE *ifp)
 void evaluateExpression(FILE *ifp)
 {
     char *temp;
+
+    if (strcmp(token, itoa()))
 }
 
 
 void evaluateCondition(FILE *ifp)
 {
+    char *temp;
+
+    if (strcmp(token, itoa(oddsym, temp, 10)) == 0){
+
+        getToken(ifp);
+        evaluateExpression(ifp);
+
+    }
+
+    else{
+
+        evaluateExpression(ifp);
+
+        if (strcmp(token, itoa(eqsym, temp, 10)) != 0 || strcmp(token, itoa(neqsym,temp,10 )) !=0 || 
+            strcmp(token, itoa(lessym, temp, 10)) != 0 || strcmp(token, itoa(leqsym,temp ,10)) != 0 ||
+            strcmp(token, itoa(gtrsym, temp, 10)) != 0 || strcmp(token, itoa(geqsym,temp, 10)) !=0 ) 
+            printError(20);
+
+        getToken(ifp);
+
+        evaluateExpression(ifp);
+
+
+
+    }
 
 }
 
