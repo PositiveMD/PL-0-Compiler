@@ -279,7 +279,12 @@ void evaluateExpression(FILE *ifp)
 {
     char *temp;
 
-    if (strcmp(token, itoa()))
+    if (strcmp(token, itoa(plussym, temp, 10)) == 0 || strcmp(token, itoa(minussym, temp, 10)) == 0){
+
+        getToken(ifp);
+        term(ifp);
+
+    }
 }
 
 
