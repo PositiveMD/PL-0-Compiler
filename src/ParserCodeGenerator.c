@@ -469,6 +469,8 @@ int main(int argc, char *argv[])
 
     convertToMCode(ofp,ofp2,printPars);
 
+    printf("No errors, program is syntactially correct.\n");
+
     fclose(ifp);
     fclose(ofp);
     fclose(ofp2);
