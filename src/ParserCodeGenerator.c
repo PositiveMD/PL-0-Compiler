@@ -51,6 +51,7 @@ typedef enum {
 static char token[MAX_TOKEN_SIZE];
 static symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
 static int symbolTableCount;
+static FILE *ifp;
 
 
 //Prints the machine code to the file
@@ -64,7 +65,7 @@ void emit(int opCode, int level, int m, FILE *ofp, FILE *ofp2, int printPars)
 
 }
 
-void getToken(FILE *ifp)
+void getToken()
 {
     if (feof(ifp)){
 
@@ -196,7 +197,7 @@ void addToSymbolTable(int type, char *identifier, int param){
 
 
 //Declares a constant
-void constDeclaration(FILE *ifp)
+void constDeclaration()
 {
     char *temp;
     char *constName;
@@ -205,90 +206,108 @@ void constDeclaration(FILE *ifp)
 
     do{
 
-        getToken(ifp);
+        getToken();
 
-        if (strcmp(token, sprintf(temp, "%d", identsym)) != 0)
+        if (atoi(token) != identsym)
             printError(4);
 
-        getToken(ifp);
+        getToken();
 
         strcpy(constName, token);
 
-        getToken(ifp);
+        getToken();
 
-        if (strcmp(token, sprintf(temp, "%d", eqsym)) != 0)
+        if (atoi(token) != eqsym)
             printError(3);
 
-        getToken(ifp);
+        getToken();
 
-        if (strcmp(token, sprintf(temp, "%d", numbersym)) != 0)
+        if (atoi(token) != numbersym)
             printError(2);
 
-        getToken(ifp);
+        getToken();
 
         value = atoi(token);
 
         addToSymbolTable(CONSTANT, constName, value);
 
-        getToken(ifp);
+        getToken();
 
-    }while(strcmp(token, sprintf(temp, "%d", commasym)) == 0);
+    }while(atoi(token) == commasym);
 
-    if (strcmp(token, sprintf(temp, "%d", semicolonsym)) != 0)
+    if (atoi(token) != semicolonsym)
         printError(26);
 
-    getToken(ifp);
-
-
-
-
-
+    getToken();
 }
 
-void factor(FILE * ifp)
+void factor()
 {
     char *temp;
 
-    if (strcmp(token, sprintf(temp, "%d", identsym)) == 0)
-        getToken(ifp);
+    if (atoi(token) == identsym)
+        getToken();
 
-    else if (strcmp(token, sprintf(temp, "%d", numbersym)) == 0)
-        getToken(ifp);
+    else if (atoi(token) == numbersym)
+        getToken();
 
-    else if (strcmp(token, sprintf(temp, "%d", lparentsym)) == 0){
+    else if (atoi(token) == lparentsym){
 
-        getToken(ifp);
-        evaluateExpression(ifp);
+        getToken();
+        evaluateExpression();
 
-        if (strcmp(token, sprintf(temp, "%d", rparentsym)) != 0)
+        if (atoi(token) != rparentsym)
             printError(22);
 
-        getToken(ifp);
+        getToken();
     }
 
     else
         printError(23);
-
-
-
 }
 
-void term(FILE *ifp)
+
+
+void term()
 {
 
     char *temp;
 
-    factor(ifp);
+    factor();
 
-    while (strcmp(token, sprintf(temp, "%d", multsym)) == 0 || strcmp(token, sprintf(temp, "%d", slashsym)) == 0){
-        getToken(ifp);
-        factor(ifp);
+    while ((atoi(token) == multsym) || (atoi(token) == slashsym)){
+        getToken();
+        factor();
     }
-    
+
+}
+
+void evaluateExpression()
+{
+    char *temp;
+
+    if ((atoi(token) == plussym) || (atoi(token) == minussym)){
+
+        getToken();
+        term();
+    }
+
+    while ((atoi(token) == plussym) || (atoi(token) == minussym)){
+
+        getToken();
+        term();
+    }
 }
 
 
-void varDeclaration(FILE *ifp)
+
+
+
+
+
+
+
+void varDeclaration()
 {
 
     char *temp;
@@ -296,70 +315,54 @@ void varDeclaration(FILE *ifp)
 
     do{
 
-        getToken(ifp);
+        getToken();
 
-        if (strcmp(token, sprintf(temp, "%d", identsym)) != 0)
+        if (atoi(token) != identsym)
             printError(4);
 
-        getToken(ifp);
+        getToken();
 
         strcpy(varName, token);
 
         addToSymbolTable(VARIABLE, varName, 0);
 
-        getToken(ifp);
+        getToken();
 
 
-    }while(strcmp(token, sprintf(temp, "%d", commasym)) == 0);
+    }while(atoi(token) == commasym);
 
-    if (strcmp(token, sprintf(temp, "%d", semicolonsym)) != 0)
+    if (atoi(token) != semicolonsym)
         printError(26);
 
-    getToken(ifp);
-    
-}
+    getToken();
 
-void evaluateExpression(FILE *ifp)
-{
-    char *temp;
-
-    if (strcmp(token, sprintf(temp, "%d", plussym)) == 0 || strcmp(token, sprintf(temp, "%d", minussym)) == 0){
-
-        getToken(ifp);
-        term(ifp);
-    }
-
-    while (strcmp(token, sprintf(temp, "%d", plussym)) == 0 || strcmp(token, sprintf(temp, "%d", minussym)) == 0){
-
-        getToken(ifp);
-        term(ifp);
-    }
 }
 
 
-void evaluateCondition(FILE *ifp)
+
+void evaluateCondition()
 {
     char *temp;
 
-    if (strcmp(token, sprintf(temp, "%d", oddsym)) == 0){
+    if (atoi(token) == oddsym){
 
-        getToken(ifp);
-        evaluateExpression(ifp);
+        getToken();
+        evaluateExpression();
 
     }
 
     else{
 
-        evaluateExpression(ifp);
+        evaluateExpression();
 
-        if (strcmp(token, sprintf(temp, "%d", eqsym)) != 0 || strcmp(token, sprintf(temp,"%d",neqsym )) !=0 || 
-            strcmp(token, sprintf(temp, "%d", lessym)) != 0 || strcmp(token, sprintf(temp,"%d" ,leqsym)) != 0 ||
-            strcmp(token, sprintf(temp, "%d", gtrsym)) != 0 || strcmp(token, sprintf(temp,"%d", geqsym)) !=0 ) 
+        if ((atoi(token) != eqsym) || (atoi(token) != neqsym ) ||
+            (atoi(token) != lessym) || (atoi(token) != leqsym) ||
+            (atoi(token) != gtrsym) || atoi(token) != geqsym)
             printError(20);
 
-        getToken(ifp);
+        getToken();
 
-        evaluateExpression(ifp);
+        evaluateExpression();
 
 
 
@@ -369,105 +372,105 @@ void evaluateCondition(FILE *ifp)
 
 
 
-void executeBody(FILE *ifp)
+void executeBody()
 {
     char *temp;
 
-    if (strcmp(token, sprintf(temp , "%d", identsym)) == 0){
+    if (atoi(token) == identsym){
 
-        getToken(ifp);
+        getToken();
 
-        if (strcmp(token, sprintf(temp, "%d" , becomessym)) != 0)
+        if (atoi(token) != becomessym)
             printError(13);
 
-        getToken(ifp);
+        getToken();
 
-        evaluateExpression(ifp);
+        evaluateExpression();
     }
 
     //else if (TOKEN = call)
 
-    else if (strcmp(token, sprintf(temp, "%d", beginsym)) == 0){
+    else if (atoi(token) == beginsym){
 
-        getToken(ifp);
+        getToken();
 
-        executeBody(ifp);
+        executeBody();
 
-        while (strcmp(token, sprintf(temp, "%d", semicolonsym)) == 0){
+        while (atoi(token) == semicolonsym){
 
-            getToken(ifp);
-            executeBody(ifp);
+            getToken();
+            executeBody();
         }
 
-        if (strcmp(token, sprintf(temp, "%d", endsym)) != 0)
+        if (atoi(token) != endsym)
             printError(27);
 
-        getToken(ifp);
+        getToken();
 
 
     }
 
-    else if (strcmp(token, sprintf(temp, "%d", ifsym)) == 0){
+    else if (atoi(token) == ifsym){
 
-        getToken(ifp);
+        getToken();
 
-        evaluateCondition(ifp);
+        evaluateCondition();
 
-        if (strcmp(token, sprintf(temp, "%d", thensym)) != 0)
+        if (atoi(token) != thensym)
             printError(16);
 
-        getToken(ifp);
+        getToken();
 
-        executeBody(ifp);
+        executeBody();
     }
 
-    else if (strcmp(token, sprintf(temp, "%d", whilesym)) == 0){
+    else if (atoi(token) == whilesym){
 
-        getToken(ifp);
+        getToken();
 
-        evaluateCondition(ifp);
+        evaluateCondition();
 
-        if (strcmp(token, sprintf(temp, "%d", dosym )) != 0)
+        if (atoi(token) != dosym )
             printError(18);
 
-        getToken(ifp);
+        getToken();
 
-        executeBody(ifp);
+        executeBody();
     }
 
 
 }
 
-void block(FILE *ifp, FILE *ofp, FILE *ofp2, int printPars)
+void block(FILE *ofp, FILE *ofp2, int printPars)
 {
     char *temp;
 
-    if (strcmp(token, sprintf(temp, "%d", constsym)) == 0)
-        constDeclaration(ifp);
+    if (atoi(token) == constsym)
+        constDeclaration();
 
-    if (strcmp(token, sprintf(temp, "%d", varsym)) == 0)
-        varDeclaration(ifp);
+    if (atoi(token) == varsym)
+        varDeclaration();
 
     //If Token = procedure
 
-    executeBody(ifp);
+    executeBody();
 
 
 
 }
 
 
-void convertToMCode(FILE *ifp, FILE *ofp, FILE *ofp2, int printPars)
+void convertToMCode(FILE *ofp, FILE *ofp2, int printPars)
 {
 
     char *temp;
 
-    getToken(ifp);
-    
+    getToken();
 
-    block(ifp, ofp, ofp2, printPars);
 
-    if (strcmp(token, sprintf(temp, "%d", periodsym)) != 0)
+    block(ofp, ofp2, printPars);
+
+    if (atoi(token) != periodsym)
         printError(9);
 
 }
@@ -482,9 +485,9 @@ int main(int argc, char *argv[])
 
     symbolTableCount = 0;
 
-    FILE *ifp, *ofp, *ofp2;
+    FILE *ofp, *ofp2;
 
-    
+
 
 	 //Checks to see if the number of arguments is correct
     if (argc > 2){
@@ -526,7 +529,7 @@ int main(int argc, char *argv[])
     ofp2 = fopen("output.txt", "a");
 
 
-    convertToMCode(ifp,ofp,ofp2,printPars);
+    convertToMCode(ofp,ofp2,printPars);
 
     fclose(ifp);
     fclose(ofp);
