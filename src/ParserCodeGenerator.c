@@ -268,7 +268,7 @@ void varDeclaration()
 
         addToSymbolTable(VARIABLE, varName, 0);
 
-        getToken();
+        
 
 
     }while(atoi(token) == commasym);
@@ -401,10 +401,7 @@ void block(FILE *ofp, FILE *ofp2, int printPars)
 void convertToMCode(FILE *ofp, FILE *ofp2, int printPars)
 {
 
-    char *temp;
-
     getToken();
-
 
     block(ofp, ofp2, printPars);
 
