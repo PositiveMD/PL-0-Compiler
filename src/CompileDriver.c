@@ -77,7 +77,8 @@ int main(int argc, char *argv[]){
 
         continueExecution = (printLex == 1) ? system("scanner.exe -l") : system("scanner.exe");
 
-        //Start Parser Code
+        if (!continueExecution)
+            continueExecution = (printPars == 1) ? system("ParserCodeGenerator.exe -a") : system("ParserCodeGenerator.exe");
 
         if (!continueExecution)
             continueExecution = (printStack == 1) ? system("P-Machine.exe -v") : system("P-Machine.exe");
@@ -88,7 +89,8 @@ int main(int argc, char *argv[]){
 
         continueExecution = (printLex == 1) ? system("./scanner -l") : system("./scanner");
 
-        //Start Parser Code
+        if (!continueExecution)
+            continueExecution = (printPars == 1) ? system("./ParserCodeGenerator -a") : system("./ParserCodeGenerator");
 
         if (!continueExecution)
             continueExecution = (printStack == 1) ? system("./P-Machine -v") : system("P-Machine");

@@ -46,10 +46,19 @@ static char token[MAX_TOKEN_SIZE];
 static symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
 static int symbolTableCount;
 static FILE *ifp;
+static int printPars;
+
+int symbolAddress(int symbolPosition);
+
+int symbolLevel(int symbolPosition);
+
+int symbolType(int symbolPosition);
 
 void emit(int opCode, int level, int m, FILE *ofp, FILE *ofp2, int printPars);
 
 void getToken();
+
+int find(char *ident);
 
 void printError(int errorCode);
 
@@ -67,7 +76,7 @@ void varDeclaration();
 
 void evaluateCondition();
 
-void executeBody();
+void statement();
 
 void block(FILE *ofp, FILE *ofp2, int printPars);
 

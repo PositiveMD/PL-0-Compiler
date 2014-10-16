@@ -6,8 +6,37 @@ COP 3402 : System Software
 
 #include "ParserCodeGenerator.h"
 
+int symbolAddress(int symbolPosition)
+{
+    return symbolTable[symbolPosition].addr;
+}
+
+int symbolLevel(int symbolPosition)
+{
+    return symbolTable[symbolPosition].level;
+}
+
+int symbolType(int symbolPosition)
+{
+    return symbolTable[symbolPosition].kind;
+}
+
+int find(char *ident)
+{
+
+    int i;
+
+    for (i = symbolTableCount; i>=1; i--){
+
+        if (strcmp(ident, symbolTable[i].name) == 0)
+            return i;
+    }
+
+    return 0;
+}
+
 //Prints the machine code to the file
-void emit(int opCode, int level, int m, FILE *ofp, FILE *ofp2, int printPars)
+void emit(int opCode, int level, int m, FILE *ofp, FILE *ofp2)
 {
 
     fprintf(ofp, "%d %d %d\n", opCode, level, m);
@@ -118,6 +147,9 @@ void printError(int errorCode)
         case 27:
             printf("begin must be closed with end");
             exit(1);
+        case 28:
+            printf("This identifier has already been declared in the symbol table");
+            exit(1);
 
         default:
             printf("Something broke in the error printer: %d ", errorCode);
@@ -131,6 +163,7 @@ void printError(int errorCode)
 void addToSymbolTable(int type, char *identifier, int param){
 
     symbolTable[symbolTableCount].kind = type;
+    symbolTable[symbolTableCount].level = symbolTableCount;
     strcpy(symbolTable[symbolTableCount].name, identifier);
 
     if (type == 1)
@@ -151,8 +184,8 @@ void addToSymbolTable(int type, char *identifier, int param){
 //Declares a constant
 void constDeclaration()
 {
-    char *temp;
-    char *constName;
+    
+    char constName[12];
 
     int value;
 
@@ -181,7 +214,14 @@ void constDeclaration()
 
         value = atoi(token);
 
-        addToSymbolTable(CONSTANT, constName, value);
+        if (!find(constName))
+            addToSymbolTable(CONSTANT, constName, value);
+
+        else{
+
+            printError(28);
+        }
+
 
         getToken();
 
@@ -196,8 +236,6 @@ void constDeclaration()
 void term()
 {
 
-    char *temp;
-
     factor();
 
     while ((atoi(token) == multsym) || (atoi(token) == slashsym)){
@@ -209,7 +247,7 @@ void term()
 
 void evaluateExpression()
 {
-    char *temp;
+    
 
     if ((atoi(token) == plussym) || (atoi(token) == minussym)){
 
@@ -226,7 +264,7 @@ void evaluateExpression()
 
 void factor()
 {
-    char *temp;
+    
 
     if (atoi(token) == identsym)
         getToken();
@@ -252,8 +290,8 @@ void factor()
 void varDeclaration()
 {
 
-    char *temp;
-    char *varName;
+    
+    char varName[12];
 
     do{
 
@@ -263,15 +301,22 @@ void varDeclaration()
             printError(4);
 
         getToken();
-
+        
         strcpy(varName, token);
 
-        addToSymbolTable(VARIABLE, varName, 0);
+        if (!find(varName))
+            addToSymbolTable(VARIABLE, varName, 0);
+
+        else
+            printError(28);
+
+        getToken();
 
         
 
-
     }while(atoi(token) == commasym);
+
+    
 
     if (atoi(token) != semicolonsym)
         printError(26);
@@ -282,8 +327,7 @@ void varDeclaration()
 
 void evaluateCondition()
 {
-    char *temp;
-
+    
     if (atoi(token) == oddsym){
 
         getToken();
@@ -303,18 +347,27 @@ void evaluateCondition()
         getToken();
 
         evaluateExpression();
-
-
-
     }
 
 }
 
-void executeBody()
+void statement()
 {
-    char *temp;
+    int symbolPosition;
 
     if (atoi(token) == identsym){
+
+        //Gets the identifier name
+        getToken();
+
+        symbolPosition = find(token);
+
+        if (symbolPosition == 0)
+            printError(11);
+
+        if (symbolType(symbolPosition) != VARIABLE)
+            printError(12);
+
 
         getToken();
 
@@ -332,13 +385,15 @@ void executeBody()
 
         getToken();
 
-        executeBody();
+        statement();
 
         while (atoi(token) == semicolonsym){
 
             getToken();
-            executeBody();
+            statement();
         }
+
+        printf("%s\n", token );
 
         if (atoi(token) != endsym)
             printError(27);
@@ -359,7 +414,7 @@ void executeBody()
 
         getToken();
 
-        executeBody();
+        statement();
     }
 
     else if (atoi(token) == whilesym){
@@ -373,7 +428,7 @@ void executeBody()
 
         getToken();
 
-        executeBody();
+        statement();
     }
 
 
@@ -381,7 +436,6 @@ void executeBody()
 
 void block(FILE *ofp, FILE *ofp2, int printPars)
 {
-    char *temp;
 
     if (atoi(token) == constsym)
         constDeclaration();
@@ -391,7 +445,7 @@ void block(FILE *ofp, FILE *ofp2, int printPars)
 
     //If Token = procedure
 
-    executeBody();
+    statement();
 
 
 
@@ -408,6 +462,8 @@ void convertToMCode(FILE *ofp, FILE *ofp2, int printPars)
     if (atoi(token) != periodsym)
         printError(9);
 
+    printf("No errors, program is syntactially correct.\n");
+
 }
 
 
@@ -418,7 +474,7 @@ int main(int argc, char *argv[])
 	int i;
 	int printPars = 0;
 
-    symbolTableCount = 0;
+    symbolTableCount = 1;
 
     FILE *ofp, *ofp2;
 
@@ -465,8 +521,6 @@ int main(int argc, char *argv[])
 
 
     convertToMCode(ofp,ofp2,printPars);
-
-    printf("No errors, program is syntactially correct.\n");
 
     fclose(ifp);
     fclose(ofp);
