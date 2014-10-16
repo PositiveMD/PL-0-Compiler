@@ -434,8 +434,14 @@ void statement()
 
         getToken();
 
-        if (atoi(token) != becomessym)
+        if (atoi(token) != becomessym){
+
+            if (atoi(token) == eqsym)
+                printError(1);
+
             printError(13);
+        }
+            
 
         getToken();
 
@@ -449,11 +455,9 @@ void statement()
     else if (atoi(token) == beginsym){
 
         getToken();
-
         statement();
 
         while (atoi(token) == semicolonsym){
-
             getToken();
             statement();
         }
@@ -464,14 +468,11 @@ void statement()
             printError(27);
 
         getToken();
-
-
     }
 
     else if (atoi(token) == ifsym){
 
         getToken();
-
         evaluateCondition();
 
         if (atoi(token) != thensym)
