@@ -4,7 +4,6 @@
  * COP3402 System Software
  */
 
-// Import necessary header files
 #include "lexicalanalyzer.h"
 #include "parser.h"
 #include "vm.h"
@@ -29,7 +28,7 @@ int main(){
 			getToken();
 		}
 
-		//printLexemeTable();
+		printLexemeTable(); //31 40 41
 		printLexemeList();
 
 		// If errors are found the parser will not run
@@ -38,8 +37,8 @@ int main(){
 		// Execution of Parser
 		else{
 			Program();
-			//printSymbolTable();
-			//printGeneratedCode();
+			printSymbolTable();
+			printGeneratedCode();
 
 			// Initializing VM
 			stack[1] = 0;
@@ -70,9 +69,223 @@ int main(){
 	return 0;
 }
 
-// LEXICAL ANALYSER STARTS HERE
-// ------------------------------------------------------------------------------------------
+//VIRTUAL MACHINE BEGINS HERE
+void printStack() {
+	int numBasePointers = 1;
+	int basePointers[700];
+	int currentBP = BP;
+	int i;
 
+	while(currentBP > 1) {
+		basePointers[700 - numBasePointers] = currentBP;
+		currentBP = stack[currentBP+1];
+		numBasePointers++;
+	}
+
+	numBasePointers--;
+
+	for(i = 1; i <= SP; i++) {
+		if (basePointers[700-numBasePointers]==i) {
+			printf("| ");
+			numBasePointers--;
+		}
+		printf("%d ", stack[i]);
+	}
+}
+
+void printCodeList() {
+	int i;
+	printf("Virtual Machine Instructions\n");
+	printf("  Line   OP     L     M\n");
+	for(i = 0; i < code_size; i++){
+		printCodeLine(i);
+		printf("\n");
+	}
+}
+
+void printCodeLine(int line) {
+	printf("%5d %5s %5d %5d", line, OPCODE_STRINGS[codeStack[line].op], codeStack[line].l, codeStack[line].m);
+}
+
+void runProgram() {
+	// Prints initial values
+	printf("\t\t\t    PC   BP     SP   Stack\n");
+	printf("Initial values  \t%5d %5d %5d ", PC, BP, SP);
+	printStack();
+	printf("\n");
+
+	while(BP > 0) {	// If BP is 0, then the program has executed an OPR.RET from the base program, time to halt.
+		if (PC < code_size) {
+			printCodeLine(PC);
+			executeNextInstruction();
+			printf("\t%5d %5d %5d    ", PC, BP, SP);	// print registers
+			printStack();
+			printf("\n");
+		} else if (PC >= MAX_CODE_LENGTH){
+			exit(ERROR_PC_TOO_HIGH);
+		} else {
+			exit(ERROR_PC_TOO_HIGH);
+		}
+	}
+}
+
+int base(int l, int base) {	//find base L levels down
+	int b1;
+	b1 = base;
+	while(l > 0){
+		b1 = stack[b1];
+		l--;
+	}
+	return b1;
+}
+
+void executeNextInstruction() {	// fetch code at PC and execute
+	int inputtemp;
+	symbol temp;
+	// Fecth Cycle
+	IR = codeStack[PC];
+	PC++;
+
+	// Execution Cycle
+	switch (IR.op) {
+		case FCH:	//treated as NOOP, (fetch already executed, TODO there may be a better way to do this, but the FETCH opcode isn't in the design (traditionally a hidden opcode))
+			break;
+		case LIT:	//push literal IR.m onto stack
+			SP++;
+			stack[SP] = IR.m;
+			break;
+		case OPR:	//operate on stack, depending on literal in instruction register, for operations, see operateOnStack()
+			operateOnStack();
+			break;
+		case LOD:	//push value at offset IR.m from IR.l lexicographical levels down onto stack
+			SP++;
+			stack[SP] = stack[base(IR.l, BP) + IR.m];
+			break;
+		case STO:	//pop value off stack and store at offset IR.m from IR.l lexicographical levels down
+			stack[base(IR.l, BP) + IR.m] = stack[SP];
+			SP--;
+			break;
+		case CAL:	//call procedure at code index IR.m (assuming in this case that the stack pointer will be properly incremented after this call is made to allocate local variables?)
+			stack[SP + 1] = base(IR.l, BP);	//static link
+			stack[SP + 2] = BP;				//dynamic link
+			stack[SP + 3] = PC;				//return address
+			BP = SP + 1;
+			PC = IR.m;
+			break;
+		case INC:	//increment stack pointer by IR.m
+			SP += IR.m;
+			break;
+		case JMP:	//jump to instruction IR.m
+			PC = IR.m;
+			break;
+		case JPC:	//jump to instruction IR.m IF top stack element == 0
+			if(stack[SP] == 0){
+				PC = IR.m;
+			}
+			SP--;
+			break;
+		case SIO:
+			standardIOOperation();
+			break;
+		case 10: break;	//suppressed, not technically a valid operation based on conversation with instructor
+		default:
+			printf("ERROR: Invalid OPCODE %d! Line: %d\n", IR.op, PC);
+			exit(ERROR_INVALID_OPCODE);
+	}
+}
+
+void operateOnStack() {	// do operation IR.m on stack
+	switch (IR.m) {
+		case RET:
+			SP = BP - 1;
+			PC = stack[SP + 3];
+			BP = stack[SP + 2];
+			break;
+		case NEG:
+			stack[SP] *= -1;
+			break;
+		case ADD:
+			SP--;
+			stack [SP] = stack[SP] + stack[SP + 1];
+			break;
+		case SUB:
+			SP--;
+			stack[SP] = stack[SP] - stack[SP + 1];
+			break;
+		case MUL:
+			SP--;
+			stack[SP] = stack[SP] * stack[SP + 1];
+			break;
+		case DIV:
+			SP--;
+			stack[SP] = stack[SP] / stack[SP + 1];
+			break;
+		case ODD:
+			stack[SP] %= 2;
+			break;
+		case MOD:
+			SP--;
+			stack[SP] %= stack[SP + 1];
+			break;
+		case EQL:
+			SP--;
+			stack[SP] = stack[SP] == stack[SP+1];
+			break;
+		case NEQ:
+			SP--;
+			stack[SP] = stack[SP] != stack[SP + 1];
+			break;
+		case LSS:
+			SP--;
+			stack[SP] = stack[SP] < stack[SP + 1];
+			break;
+		case LEQ:
+			SP--;
+			stack[SP] = stack[SP] <= stack[SP + 1];
+			break;
+		case GTR:
+			SP--;
+			stack[SP] = stack[SP] > stack[SP + 1];
+			break;
+		case GEQ:
+			SP--;
+			stack[SP] = stack[SP] >= stack[SP + 1];
+			break;
+		default:
+			printf("ERROR: Invalid STACK_OPERATION on line %d: %d cannot be resolved to an operation.\n", PC, IR.m);
+			printStack();
+			printf("\n");
+			exit(ERROR_INVALID_STACK_OPERATION);
+	}
+}
+
+void standardIOOperation() {
+
+        switch (IR.m) {
+                case 0: //for the purposes of testing the factorial code, which was based on a slightly different instruction set, this instruction will do the same as SOT
+                case SOT:       // pop the top element of the stack off and display it to standard out
+                        printf("\t    The value of %s is %d\n\t\t", Osymbol.name, stack[SP]);
+                        SP--;
+                        break;
+                case SIN:       // push the first integer to be entered from standard input onto the stack, keep retrying till good data is gotten
+                        SP++;
+                        int i;
+			printf("\t    Enter value of %s: ", Isymbol.name);
+
+			while (!scanf("%d", &i));
+                        printf("\t\t ");
+			stack[SP] = i;
+			updateTable(Isymbol);
+                        break;
+                default:
+                        printf("ERROR: Invalid SIO_OPERATION on line %d: %d cannot be resolved to a standard IO operation.\n", PC, IR.m);
+                        printStack();
+                        printf("\n");
+                        exit(ERROR_INVALID_IO_OPERATION);
+        }
+}
+
+// LEXICAL ANALYSER STARTS HERE
 // Prints the number of errors and returns TRUE if errors where found and False otherwise.
 int printErrors(){
 	int i, hasErrors = FALSE;
@@ -109,11 +322,11 @@ void printLexemeList(){
 	printf("\nLexeme List\n");
 	for(i = 0; i < h-1; i++){
 		if(nameRec[i].hasValue == TRUE)
-			printf("%d %d|", nameRec[i].kind, nameRec[i].value);
+			printf("%d %d ", nameRec[i].kind, nameRec[i].value);
 		else if(nameRec[i].kind == identsym)
-			printf("%d %s|", nameRec[i].kind, nameRec[i].name);
+			printf("%d %s ", nameRec[i].kind, nameRec[i].name);
 		else
-			printf("%d|", nameRec[i].kind);
+			printf("%d ", nameRec[i].kind);
 	}
 	printf("\n");
 
@@ -122,11 +335,11 @@ void printLexemeList(){
 
 	for( i = 0; i < h-1; i ++){
 		if(nameRec[i].hasValue == TRUE)
-			printf("%s.%d ", symbolesName[nameRec[i].kind], nameRec[i].value);
+			printf("%s.%d\n", symbolesName[nameRec[i].kind], nameRec[i].value);
 		else if(nameRec[i].kind == identsym)
-			printf("%s.%s ", symbolesName[identsym], nameRec[i].name);
+			printf("%s.%s\n", symbolesName[identsym], nameRec[i].name);
 		else
-			printf("%s ", symbolesName[nameRec[i].kind]);
+			printf("%s\n", symbolesName[nameRec[i].kind]);
 	}
 
 }
@@ -156,7 +369,6 @@ void initialize(){
         charCount = 0;
         line[0] = '\0';
 }
-
 
 // retrieves next character
 void nextCharacter(){
@@ -190,8 +402,6 @@ void nextCharacter(){
 
 		currChar = line[charCount++];
 }
-
-
 
 // This function will read through white space and comments
 // when encountered
@@ -467,9 +677,7 @@ void getToken(){
 		}
 }
 
-
-
-/// PARSER BEGINS HERE ------------------------------------------------------------------------
+// PARSER BEGINS HERE
 void Program(){
 	nextToken();
 	Block();
@@ -937,7 +1145,6 @@ void Factor(){
 		printParserErrors(23);
 }
 
-
 void printParserErrors(int errorNum){
 	printf("\n");
 	printf("Error found on line %d: ", currLine);
@@ -1078,225 +1285,3 @@ void printGeneratedCode(){
 	}
 	printf("\n");
 }
-
-//VIRTUAL MACHINE BEGINS HERE
-// -------------------------------------------------------------------------------------
-
-
-void printStack() {
-	int numBasePointers = 1;
-	int basePointers[700];
-	int currentBP = BP;
-	int i;
-
-	while(currentBP > 1) {
-		basePointers[700 - numBasePointers] = currentBP;
-		currentBP = stack[currentBP+1];
-		numBasePointers++;
-	}
-
-	numBasePointers--;
-
-	for(i = 1; i <= SP; i++) {
-		if (basePointers[700-numBasePointers]==i) {
-			printf("| ");
-			numBasePointers--;
-		}
-		printf("%d ", stack[i]);
-	}
-}
-
-void printCodeList() {
-	int i;
-	printf("Virtual Machine Instructions\n");
-	printf("  Line   OP     L     M\n");
-	for(i = 0; i < code_size; i++){
-		printCodeLine(i);
-		printf("\n");
-	}
-}
-
-void printCodeLine(int line) {
-	printf("%5d %5s %5d %5d", line, OPCODE_STRINGS[codeStack[line].op], codeStack[line].l, codeStack[line].m);
-}
-
-void runProgram() {
-	// Prints initial values
-	printf("\t\t\t    PC   BP     SP   Stack\n");
-	printf("Initial values  \t%5d %5d %5d ", PC, BP, SP);
-	printStack();
-	printf("\n");
-
-	while(BP > 0) {	// If BP is 0, then the program has executed an OPR.RET from the base program, time to halt.
-		if (PC < code_size) {
-			printCodeLine(PC);
-			executeNextInstruction();
-			printf("\t%5d %5d %5d    ", PC, BP, SP);	// print registers
-			printStack();
-			printf("\n");
-		} else if (PC >= MAX_CODE_LENGTH){
-			exit(ERROR_PC_TOO_HIGH);
-		} else {
-			exit(ERROR_PC_TOO_HIGH);
-		}
-	}
-}
-
-int base(int l, int base) {	//find base L levels down
-	int b1;
-	b1 = base;
-	while(l > 0){
-		b1 = stack[b1];
-		l--;
-	}
-	return b1;
-}
-
-void executeNextInstruction() {	// fetch code at PC and execute
-	int inputtemp;
-	symbol temp;
-	// Fecth Cycle
-	IR = codeStack[PC];
-	PC++;
-
-	// Execution Cycle
-	switch (IR.op) {
-		case FCH:	//treated as NOOP, (fetch already executed, TODO there may be a better way to do this, but the FETCH opcode isn't in the design (traditionally a hidden opcode))
-			break;
-		case LIT:	//push literal IR.m onto stack
-			SP++;
-			stack[SP] = IR.m;
-			break;
-		case OPR:	//operate on stack, depending on literal in instruction register, for operations, see operateOnStack()
-			operateOnStack();
-			break;
-		case LOD:	//push value at offset IR.m from IR.l lexicographical levels down onto stack
-			SP++;
-			stack[SP] = stack[base(IR.l, BP) + IR.m];
-			break;
-		case STO:	//pop value off stack and store at offset IR.m from IR.l lexicographical levels down
-			stack[base(IR.l, BP) + IR.m] = stack[SP];
-			SP--;
-			break;
-		case CAL:	//call procedure at code index IR.m (assuming in this case that the stack pointer will be properly incremented after this call is made to allocate local variables?)
-			stack[SP + 1] = base(IR.l, BP);	//static link
-			stack[SP + 2] = BP;				//dynamic link
-			stack[SP + 3] = PC;				//return address
-			BP = SP + 1;
-			PC = IR.m;
-			break;
-		case INC:	//increment stack pointer by IR.m
-			SP += IR.m;
-			break;
-		case JMP:	//jump to instruction IR.m
-			PC = IR.m;
-			break;
-		case JPC:	//jump to instruction IR.m IF top stack element == 0
-			if(stack[SP] == 0){
-				PC = IR.m;
-			}
-			SP--;
-			break;
-		case SIO:
-			standardIOOperation();
-			break;
-		case 10: break;	//suppressed, not technically a valid operation based on conversation with instructor
-		default:
-			printf("ERROR: Invalid OPCODE %d! Line: %d\n", IR.op, PC);
-			exit(ERROR_INVALID_OPCODE);
-	}
-}
-
-void operateOnStack() {	// do operation IR.m on stack
-	switch (IR.m) {
-		case RET:
-			SP = BP - 1;
-			PC = stack[SP + 3];
-			BP = stack[SP + 2];
-			break;
-		case NEG:
-			stack[SP] *= -1;
-			break;
-		case ADD:
-			SP--;
-			stack [SP] = stack[SP] + stack[SP + 1];
-			break;
-		case SUB:
-			SP--;
-			stack[SP] = stack[SP] - stack[SP + 1];
-			break;
-		case MUL:
-			SP--;
-			stack[SP] = stack[SP] * stack[SP + 1];
-			break;
-		case DIV:
-			SP--;
-			stack[SP] = stack[SP] / stack[SP + 1];
-			break;
-		case ODD:
-			stack[SP] %= 2;
-			break;
-		case MOD:
-			SP--;
-			stack[SP] %= stack[SP + 1];
-			break;
-		case EQL:
-			SP--;
-			stack[SP] = stack[SP] == stack[SP+1];
-			break;
-		case NEQ:
-			SP--;
-			stack[SP] = stack[SP] != stack[SP + 1];
-			break;
-		case LSS:
-			SP--;
-			stack[SP] = stack[SP] < stack[SP + 1];
-			break;
-		case LEQ:
-			SP--;
-			stack[SP] = stack[SP] <= stack[SP + 1];
-			break;
-		case GTR:
-			SP--;
-			stack[SP] = stack[SP] > stack[SP + 1];
-			break;
-		case GEQ:
-			SP--;
-			stack[SP] = stack[SP] >= stack[SP + 1];
-			break;
-		default:
-			printf("ERROR: Invalid STACK_OPERATION on line %d: %d cannot be resolved to an operation.\n", PC, IR.m);
-			printStack();
-			printf("\n");
-			exit(ERROR_INVALID_STACK_OPERATION);
-	}
-}
-
-void standardIOOperation() {
-
-        switch (IR.m) {
-                case 0: //for the purposes of testing the factorial code, which was based on a slightly different instruction set, this instruction will do the same as SOT
-                case SOT:       // pop the top element of the stack off and display it to standard out
-                        printf("\t    The value of %s is %d\n\t\t", Osymbol.name, stack[SP]);
-                        SP--;
-                        break;
-                case SIN:       // push the first integer to be entered from standard input onto the stack, keep retrying till good data is gotten
-                        SP++;
-                        int i;
-			printf("\t    Enter value of %s: ", Isymbol.name);
-
-			while (!scanf("%d", &i));
-                        printf("\t\t ");
-			stack[SP] = i;
-			updateTable(Isymbol);
-                        break;
-                default:
-                        printf("ERROR: Invalid SIO_OPERATION on line %d: %d cannot be resolved to a standard IO operation.\n", PC, IR.m);
-                        printStack();
-                        printf("\n");
-                        exit(ERROR_INVALID_IO_OPERATION);
-        }
-}
-
-
-
