@@ -42,10 +42,15 @@ typedef enum {
     LIT = 1, OPR, LOD, STO, CAL, INC, JMP, JPC, SIO
 } op_code_types;
 
+typedef enum {
+    OPR_RET = 0, OPR_NEG, OPR_ADD, OPR_SUB, OPR_MUL, OPR_DIV, OPR_ODD, OPR_MOD,
+    OPR_EQL, OPR_NEQ, OPR_LSS, OPR_LEQ, OPR_GTR, OPR_GEQ
+} opr_type;
+
 static char token[MAX_TOKEN_SIZE];
 static symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
 static int symbolTableCount;
-static FILE *ifp;
+static FILE *ifp, *ofp, *ofp2;
 static int printPars;
 
 int symbolAddress(int symbolPosition);
@@ -54,7 +59,7 @@ int symbolLevel(int symbolPosition);
 
 int symbolType(int symbolPosition);
 
-void emit(int opCode, int level, int m, FILE *ofp, FILE *ofp2, int printPars);
+void emit(int opCode, int level, int m);
 
 void getToken();
 
@@ -78,9 +83,9 @@ void evaluateCondition();
 
 void statement();
 
-void block(FILE *ofp, FILE *ofp2, int printPars);
+void block(FILE *ofp, FILE *ofp2);
 
-void convertToMCode(FILE *ofp, FILE *ofp2, int printPars);
+void convertToMCode(FILE *ofp, FILE *ofp2);
 
 
 

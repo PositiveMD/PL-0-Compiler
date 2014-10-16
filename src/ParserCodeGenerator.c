@@ -36,7 +36,7 @@ int find(char *ident)
 }
 
 //Prints the machine code to the file
-void emit(int opCode, int level, int m, FILE *ofp, FILE *ofp2)
+void emit(int opCode, int level, int m)
 {
 
     fprintf(ofp, "%d %d %d\n", opCode, level, m);
@@ -247,12 +247,17 @@ void term()
 
 void evaluateExpression()
 {
-    
+    int addop;
 
     if ((atoi(token) == plussym) || (atoi(token) == minussym)){
 
+        addop = atoi(token);
+
         getToken();
         term();
+
+        if (addop == minussym)
+            emit(OPR, 0, OPR_NEG);
     }
 
     while ((atoi(token) == plussym) || (atoi(token) == minussym)){
@@ -264,10 +269,29 @@ void evaluateExpression()
 
 void factor()
 {
-    
+    int symbolPosition;
 
-    if (atoi(token) == identsym)
+    if (atoi(token) == identsym){
+
         getToken();
+        symbolPosition = find(token);
+
+        if (symbolPosition == 0)
+            printError(11);
+
+        if (symbolType(symbolPosition) == VARIABLE)
+            emit(LOD, symbolLevel(symbolPosition), symbolAddress(symbolPosition));
+
+        else if (symbolType(symbolPosition) == CONSTANT)
+            emit(LIT, symbolLevel(symbolPosition), symbolAddress(symbolPosition));
+
+        else {
+            printError(24);
+        }
+
+        getToken();
+
+    }
 
     else if (atoi(token) == numbersym)
         getToken();
@@ -377,6 +401,8 @@ void statement()
         getToken();
 
         evaluateExpression();
+
+        emit(STO, symbolLevel(symbolPosition), symbolAddress(symbolPosition));
     }
 
     //else if (TOKEN = call)
@@ -434,7 +460,7 @@ void statement()
 
 }
 
-void block(FILE *ofp, FILE *ofp2, int printPars)
+void block(FILE *ofp, FILE *ofp2)
 {
 
     if (atoi(token) == constsym)
@@ -452,12 +478,12 @@ void block(FILE *ofp, FILE *ofp2, int printPars)
 }
 
 
-void convertToMCode(FILE *ofp, FILE *ofp2, int printPars)
+void convertToMCode(FILE *ofp, FILE *ofp2)
 {
 
     getToken();
 
-    block(ofp, ofp2, printPars);
+    block(ofp, ofp2);
 
     if (atoi(token) != periodsym)
         printError(9);
@@ -472,11 +498,11 @@ int main(int argc, char *argv[])
 {
 
 	int i;
-	int printPars = 0;
+	printPars = 0;
 
     symbolTableCount = 1;
 
-    FILE *ofp, *ofp2;
+    
 
 
 
@@ -520,7 +546,7 @@ int main(int argc, char *argv[])
     ofp2 = fopen("output.txt", "a");
 
 
-    convertToMCode(ofp,ofp2,printPars);
+    convertToMCode(ofp,ofp2);
 
     fclose(ifp);
     fclose(ofp);
