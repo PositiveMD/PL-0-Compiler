@@ -6,6 +6,7 @@
 
 #define MAX_SYMBOL_TABLE_SIZE 100
 #define MAX_TOKEN_SIZE 12
+#define MAX_CODE_LENGTH 500
 
 /*
 Constants must store kind, name, and value
@@ -22,6 +23,13 @@ typedef struct symbol
     int level;      //L Level
     int addr;       //M address
 } symbol;
+
+typedef struct instruction{
+    int op; // opcode
+    int l;  // L
+    int m;   // M
+}instruction;
+
 
 //The enums with all the token types
 typedef enum {
@@ -52,6 +60,8 @@ static symbol symbolTable[MAX_SYMBOL_TABLE_SIZE];
 static int symbolTableCount;
 static FILE *ifp, *ofp, *ofp2;
 static int printPars;
+static int codeCount;
+static instruction code[MAX_CODE_LENGTH];
 
 int symbolAddress(int symbolPosition);
 

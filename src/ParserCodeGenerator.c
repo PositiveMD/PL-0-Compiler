@@ -38,12 +38,29 @@ int find(char *ident)
 //Prints the machine code to the file
 void emit(int opCode, int level, int m)
 {
+    if (codeCount > MAX_CODE_LENGTH)
+        printError(25);
 
-    fprintf(ofp, "%d %d %d\n", opCode, level, m);
+    code[codeCount].op = opCode;
+    code[codeCount].l = level;
+    code[codeCount].m = m;
 
-    if (printPars)
-        fprintf(ofp2, "%d %d %d\n", opCode, level, m);
+    codeCount++;
 
+}
+
+void printCodeTable()
+{
+    int i;
+
+    for (i = 1; i <= codeCount; i++){
+
+        fprintf(ofp, "%d %d %d\n", code[i].op , code[i].l , code[i].m);
+        fprintf(ofp2, "%d %d %d\n", code[i].op , code[i].l , code[i].m);
+
+        if (printPars)
+            printf("%d %d %d\n", code[i].op, code[i].l, code[i].m);
+    }
 }
 
 void getToken()
@@ -235,12 +252,19 @@ void constDeclaration()
 
 void term()
 {
+    int mulop;
 
     factor();
 
     while ((atoi(token) == multsym) || (atoi(token) == slashsym)){
+        mulop = atoi(token);
         getToken();
         factor();
+
+        if (mulop == multsym)
+            emit(OPR, 0, OPR_MUL);
+        else
+            emit(OPR, 0, OPR_DIV);
     }
 
 }
@@ -260,10 +284,21 @@ void evaluateExpression()
             emit(OPR, 0, OPR_NEG);
     }
 
+    else{
+        term();
+    }
+
     while ((atoi(token) == plussym) || (atoi(token) == minussym)){
 
+        addop = atoi(token);
         getToken();
         term();
+
+        if (addop == plussym)
+            emit(OPR, 0, OPR_ADD);
+        else{
+            emit(OPR, 0, OPR_SUB);
+        }
     }
 }
 
@@ -379,6 +414,10 @@ void statement()
 {
     int symbolPosition;
 
+    int cx1, cx2;
+
+    int ctemp;
+
     if (atoi(token) == identsym){
 
         //Gets the identifier name
@@ -419,7 +458,7 @@ void statement()
             statement();
         }
 
-        printf("%s\n", token );
+        //printf("%s\n", token );
 
         if (atoi(token) != endsym)
             printError(27);
@@ -440,14 +479,22 @@ void statement()
 
         getToken();
 
+        ctemp = codeCount;
+
+        emit(JPC, 0, 0);
+
         statement();
+
+        code[ctemp].m = codeCount;
     }
 
     else if (atoi(token) == whilesym){
 
+        cx1 = codeCount;
         getToken();
-
         evaluateCondition();
+        cx2 = codeCount;
+        emit(JPC, 0, 0);
 
         if (atoi(token) != dosym )
             printError(18);
@@ -455,6 +502,11 @@ void statement()
         getToken();
 
         statement();
+
+        emit(JMP, 0, cx1);
+        code[cx2].m = codeCount;
+
+
     }
 
 
@@ -502,6 +554,8 @@ int main(int argc, char *argv[])
 
     symbolTableCount = 1;
 
+    codeCount = 1;
+
     
 
 
@@ -547,6 +601,8 @@ int main(int argc, char *argv[])
 
 
     convertToMCode(ofp,ofp2);
+
+    printCodeTable();
 
     fclose(ifp);
     fclose(ofp);
