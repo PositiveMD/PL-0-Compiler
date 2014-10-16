@@ -201,7 +201,7 @@ void addToSymbolTable(int type, char *identifier, int param){
 //Declares a constant
 void constDeclaration()
 {
-    
+
     char constName[12];
 
     int value;
@@ -349,7 +349,7 @@ void factor()
 void varDeclaration()
 {
 
-    
+
     char varName[12];
 
     do{
@@ -360,7 +360,7 @@ void varDeclaration()
             printError(4);
 
         getToken();
-        
+
         strcpy(varName, token);
 
         if (!find(varName))
@@ -371,11 +371,11 @@ void varDeclaration()
 
         getToken();
 
-        
+
 
     }while(atoi(token) == commasym);
 
-    
+
 
     if (atoi(token) != semicolonsym)
         printError(26);
@@ -386,7 +386,7 @@ void varDeclaration()
 
 void evaluateCondition()
 {
-    
+
     if (atoi(token) == oddsym){
 
         getToken();
@@ -441,7 +441,7 @@ void statement()
 
             printError(13);
         }
-            
+
 
         getToken();
 
@@ -557,7 +557,7 @@ int main(int argc, char *argv[])
 
     codeCount = 1;
 
-    
+
 
 
 
@@ -591,7 +591,7 @@ int main(int argc, char *argv[])
 
     //Checks to see if the file exists
     if (!(access( "lexemelist.txt", F_OK ) != -1)){
-        printf("input.txt does not exist in the current directory\n");
+        printf("lexemelist.txt does not exist in the current directory\n");
         exit(1);
     }
 
