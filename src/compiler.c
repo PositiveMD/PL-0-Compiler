@@ -10,11 +10,11 @@
 
 int main(){
 
-        char filename[30];
-        printf("PL/O Compiler\n");
-        printf("Enter filename that contains source code: ");
+        char filename[30] = "input.txt";
+//        printf("PL/O Compiler\n");
+//        printf("Enter filename that contains source code: ");
 
-        scanf("%s", filename);
+//        scanf("%s", filename);
 
         ifp = fopen(filename, "r");
 
@@ -33,7 +33,7 @@ int main(){
 
 		// If errors are found the parser will not run
 		if(printErrors() == TRUE)
-			printf("\nParser will not execute because errors where found in sourece code\n");
+			printf("\nParser will not execute because errors where found in source code\n");
 		// Execution of Parser
 		else{
 			Program();
@@ -1178,7 +1178,7 @@ void printParserErrors(int errorNum){
 			break;
 		case 14: printf("call must be followed by an identifier.\n");
 			break;
-		case 15: printf("Call of a constant or vairable is meaningless.\n");
+		case 15: printf("Call of a constant or variable is meaningless.\n");
 			break;
 		case 16: printf("then expected.\n");
 			break;
