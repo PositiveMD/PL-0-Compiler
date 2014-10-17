@@ -188,14 +188,13 @@ void printError(int errorCode)
 void addToSymbolTable(int type, char *identifier, int param){
 
     symbolTable[symbolTableCount].kind = type;
-    symbolTable[symbolTableCount].level = symbolTableCount;
     strcpy(symbolTable[symbolTableCount].name, identifier);
 
     if (type == 1)
         symbolTable[symbolTableCount].val = param;
 
     else {
-        //symbolTable[symbolTableCount].addr = param;
+        symbolTable[symbolTableCount].addr = symbolTableCount;
         symbolTable[symbolTableCount].level = 1;
     }
 
@@ -234,7 +233,7 @@ void factor()
             printError(11);
 
         if (symbolType(symbolPosition) == VARIABLE)
-            emit(LOD, symbolLevel(symbolPosition), symbolAddress(symbolPosition));
+            emit(LOD, symbolLevel(symbolPosition) -1 , symbolAddress(symbolPosition));
 
         else if (symbolType(symbolPosition) == CONSTANT)
             emit(LIT, symbolLevel(symbolPosition), symbolAddress(symbolPosition));
@@ -253,7 +252,7 @@ void factor()
         getToken();
 
     }
-        
+
 
     else if (atoi(token) == lparentsym){
 
@@ -367,7 +366,7 @@ void statement()
 
         evaluateExpression();
 
-        emit(STO, symbolLevel(symbolPosition), symbolAddress(symbolPosition));
+        emit(STO, symbolLevel(symbolPosition) -1, symbolAddress(symbolPosition));
     }
 
     //else if (TOKEN = call)
@@ -378,19 +377,16 @@ void statement()
         statement();
 
 
-        while (atoi(token) == semicolonsym || atoi(token) == beginsym || 
-            atoi(token) == ifsym || atoi(token) == whilesym || 
+        while (atoi(token) == semicolonsym || atoi(token) == beginsym ||
+            atoi(token) == ifsym || atoi(token) == whilesym ||
             atoi(token) == writesym || atoi(token) == readsym){
+
+            if (atoi(token) == semicolonsym)
+            getToken();
 
             statement();
 
         }
-
-        if (atoi(token) == semicolonsym)
-            getToken();
-
-        else 
-            printError(10);
 
        // printf("%s\n", token );
 
@@ -460,13 +456,38 @@ void statement()
         //SIO: reads input from user and stores at the top of the stack
         emit(SIO2, 0, 2);
 
-        //Stores the value 
-        emit(STO, symbolLevel(symbolPosition), symbolAddress(symbolPosition));
+        //Stores the value
+        emit(STO, symbolLevel(symbolPosition) -1, symbolAddress(symbolPosition));
+
+        getToken();
 
 
     }
 
     else if (atoi(token) == writesym){
+
+        getToken();
+
+        if (atoi(token) != identsym)
+            printError(4);
+
+        getToken();
+
+        symbolPosition = find(token);
+
+        if (symbolPosition == 0)
+            printError(11);
+
+        if (symbolType(symbolPosition) == VARIABLE)
+            emit(LOD, symbolLevel(symbolPosition) -1 , symbolAddress(symbolPosition));
+        
+        else
+            emit(LIT, 0, symbolAddress(symbolPosition));
+
+
+        emit(SIO, 0, 1);
+
+        getToken();
 
     }
 
