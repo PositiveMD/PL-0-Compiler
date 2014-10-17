@@ -47,7 +47,7 @@ typedef enum{
 
 //The enums with all the opCode types
 typedef enum {
-    LIT = 1, OPR, LOD, STO, CAL, INC, JMP, JPC, SIO
+    LIT = 1, OPR, LOD, STO, CAL, INC, JMP, JPC, SIO, SIO2, SIO3
 } op_code_types;
 
 typedef enum {

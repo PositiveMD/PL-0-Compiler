@@ -25,7 +25,7 @@ int symbolType(int symbolPosition)
 
 
 /*
-    Returns the postion of the symbol in symbol table. 
+    Returns the postion of the symbol in symbol table.
     Returns 0 if the symbol is not found
 */
 int find(char *ident)
@@ -61,7 +61,7 @@ void printCodeTable()
 {
     int i;
 
-    for (i = 1; i <= codeCount; i++){
+    for (i = 1; i < codeCount; i++){
 
         fprintf(ofp, "%d %d %d\n", code[i].op , code[i].l , code[i].m);
         fprintf(ofp2, "%d %d %d\n", code[i].op , code[i].l , code[i].m);
@@ -79,7 +79,7 @@ void getToken()
         exit(1);
     }
 
-    fscanf(ifp, "%s", &token);
+    fscanf(ifp, "%s", token);
 
 }
 
@@ -196,7 +196,7 @@ void addToSymbolTable(int type, char *identifier, int param){
 
     else {
         //symbolTable[symbolTableCount].addr = param;
-        symbolTable[symbolTableCount].level = 0;
+        symbolTable[symbolTableCount].level = 1;
     }
 
     symbolTableCount++;
@@ -247,8 +247,13 @@ void factor()
 
     }
 
-    else if (atoi(token) == numbersym)
+    else if (atoi(token) == numbersym){
         getToken();
+        emit(LIT, 0, atoi(token));
+        getToken();
+
+    }
+        
 
     else if (atoi(token) == lparentsym){
 
@@ -333,8 +338,6 @@ void statement()
 
     int ctemp;
 
-
-
     if (atoi(token) == identsym){
 
         //Gets the identifier name
@@ -373,15 +376,23 @@ void statement()
 
         getToken();
         statement();
-        
 
-        while (atoi(token) == semicolonsym){
-            getToken();
+
+        while (atoi(token) == semicolonsym || atoi(token) == beginsym || 
+            atoi(token) == ifsym || atoi(token) == whilesym || 
+            atoi(token) == writesym || atoi(token) == readsym){
+
             statement();
-            
+
         }
 
-        printf("%s\n", token );
+        if (atoi(token) == semicolonsym)
+            getToken();
+
+        else 
+            printError(10);
+
+       // printf("%s\n", token );
 
         if (atoi(token) != endsym)
             printError(27);
@@ -426,6 +437,36 @@ void statement()
         emit(JMP, 0, cx1);
         code[cx2].m = codeCount;
 
+    }
+
+    //Reads inputs from user and stores in identifier
+    else if (atoi(token) == readsym){
+
+        getToken();
+
+        if (atoi(token) != identsym)
+            printError(4);
+
+        getToken();
+
+        symbolPosition = find(token);
+
+        if (symbolPosition == 0)
+            printError(11);
+
+        if (symbolType(symbolPosition) != VARIABLE)
+            printError(12);
+
+        //SIO: reads input from user and stores at the top of the stack
+        emit(SIO2, 0, 2);
+
+        //Stores the value 
+        emit(STO, symbolLevel(symbolPosition), symbolAddress(symbolPosition));
+
+
+    }
+
+    else if (atoi(token) == writesym){
 
     }
 
