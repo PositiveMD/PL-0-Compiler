@@ -61,7 +61,7 @@ void printCodeTable()
 {
     int i;
 
-    for (i = 1; i < codeCount; i++){
+    for (i = 0; i < codeCount; i++){
 
         fprintf(ofp, "%d %d %d\n", code[i].op , code[i].l , code[i].m);
         fprintf(ofp2, "%d %d %d\n", code[i].op , code[i].l , code[i].m);
@@ -273,6 +273,8 @@ void factor()
 void evaluateCondition()
 {
 
+    int relOP;
+
     if (atoi(token) == oddsym){
 
         getToken();
@@ -284,14 +286,57 @@ void evaluateCondition()
 
         evaluateExpression();
 
-        if ((atoi(token) != eqsym) || (atoi(token) != neqsym ) ||
-            (atoi(token) != lessym) || (atoi(token) != leqsym) ||
-            (atoi(token) != gtrsym) || atoi(token) != geqsym)
-            printError(20);
+        switch (relOP = atoi(token)){
 
-        getToken();
+            case eqsym:
+                getToken();
+                break;
+            case neqsym:
+                getToken();
+                break;
+            case lessym:
+                getToken();
+                break;
+            case leqsym:
+                getToken();
+                break;
+            case gtrsym:
+                getToken();
+                break;
+            case geqsym:
+                getToken();
+                break;
+            default:
+                printError(20);
+
+        }        
 
         evaluateExpression();
+
+        switch (relOP){
+
+            case eqsym:
+                emit(OPR, 0, OPR_EQL);
+                break;
+            case neqsym:
+                emit(OPR, 0, OPR_NEQ);
+                break;
+            case lessym:
+                emit(OPR, 0, OPR_LSS);
+                break;
+            case leqsym:
+                emit(OPR, 0, OPR_LEQ);
+                break;
+            case gtrsym:
+                emit(OPR, 0, OPR_GTR);
+                break;
+            case geqsym:
+                emit(OPR, 0, OPR_GEQ);
+                break;
+            default:
+                printf("Something went wrong with the relational emitter");
+
+        }
     }
 
 }
@@ -482,7 +527,7 @@ void statement()
             emit(LOD, symbolLevel(symbolPosition) -1 , symbolAddress(symbolPosition));
         
         else
-            emit(LIT, 0, symbolAddress(symbolPosition));
+            emit(LIT, 0, symbolTable[symbolPosition].val);
 
 
         emit(SIO, 0, 1);
@@ -583,7 +628,7 @@ void constDeclaration()
     getToken();
 }
 
-void block(FILE *ofp, FILE *ofp2)
+void block()
 {
 
     if (atoi(token) == constsym)
@@ -598,7 +643,7 @@ void block(FILE *ofp, FILE *ofp2)
 }
 
 
-void convertToMCode(FILE *ofp, FILE *ofp2)
+void convertToMCode()
 {
 
     getToken();
@@ -622,7 +667,7 @@ int main(int argc, char *argv[])
 
     symbolTableCount = 1;
 
-    codeCount = 1;
+    codeCount = 0;
 
 	 //Checks to see if the number of arguments is correct
     if (argc > 2){
@@ -662,7 +707,7 @@ int main(int argc, char *argv[])
     ofp2 = fopen("output.txt", "a");
 
 
-    convertToMCode(ofp,ofp2);
+    convertToMCode();
 
     printCodeTable();
 

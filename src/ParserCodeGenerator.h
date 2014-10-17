@@ -93,6 +93,6 @@ void evaluateCondition();
 
 void statement();
 
-void block(FILE *ofp, FILE *ofp2);
+void block();
 
-void convertToMCode(FILE *ofp, FILE *ofp2);
+void convertToMCode();
