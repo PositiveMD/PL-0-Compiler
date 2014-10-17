@@ -6,6 +6,8 @@ COP 3402 : System Software
 
 #include "ParserCodeGenerator.h"
 
+
+
 int symbolAddress(int symbolPosition)
 {
     return symbolTable[symbolPosition].addr;
@@ -21,6 +23,11 @@ int symbolType(int symbolPosition)
     return symbolTable[symbolPosition].kind;
 }
 
+
+/*
+    Returns the postion of the symbol in symbol table. 
+    Returns 0 if the symbol is not found
+*/
 int find(char *ident)
 {
 
@@ -49,6 +56,7 @@ void emit(int opCode, int level, int m)
 
 }
 
+//Prints the code table to a text file as input for the P-Machine
 void printCodeTable()
 {
     int i;
@@ -192,62 +200,6 @@ void addToSymbolTable(int type, char *identifier, int param){
     }
 
     symbolTableCount++;
-
-
-
-}
-
-
-//Declares a constant
-void constDeclaration()
-{
-
-    char constName[12];
-
-    int value;
-
-    do{
-
-        getToken();
-
-        if (atoi(token) != identsym)
-            printError(4);
-
-        getToken();
-
-        strcpy(constName, token);
-
-        getToken();
-
-        if (atoi(token) != eqsym)
-            printError(3);
-
-        getToken();
-
-        if (atoi(token) != numbersym)
-            printError(2);
-
-        getToken();
-
-        value = atoi(token);
-
-        if (!find(constName))
-            addToSymbolTable(CONSTANT, constName, value);
-
-        else{
-
-            printError(28);
-        }
-
-
-        getToken();
-
-    }while(atoi(token) == commasym);
-
-    if (atoi(token) != semicolonsym)
-        printError(26);
-
-    getToken();
 }
 
 void term()
@@ -267,39 +219,6 @@ void term()
             emit(OPR, 0, OPR_DIV);
     }
 
-}
-
-void evaluateExpression()
-{
-    int addop;
-
-    if ((atoi(token) == plussym) || (atoi(token) == minussym)){
-
-        addop = atoi(token);
-
-        getToken();
-        term();
-
-        if (addop == minussym)
-            emit(OPR, 0, OPR_NEG);
-    }
-
-    else{
-        term();
-    }
-
-    while ((atoi(token) == plussym) || (atoi(token) == minussym)){
-
-        addop = atoi(token);
-        getToken();
-        term();
-
-        if (addop == plussym)
-            emit(OPR, 0, OPR_ADD);
-        else{
-            emit(OPR, 0, OPR_SUB);
-        }
-    }
 }
 
 void factor()
@@ -346,43 +265,6 @@ void factor()
         printError(23);
 }
 
-void varDeclaration()
-{
-
-
-    char varName[12];
-
-    do{
-
-        getToken();
-
-        if (atoi(token) != identsym)
-            printError(4);
-
-        getToken();
-
-        strcpy(varName, token);
-
-        if (!find(varName))
-            addToSymbolTable(VARIABLE, varName, 0);
-
-        else
-            printError(28);
-
-        getToken();
-
-
-
-    }while(atoi(token) == commasym);
-
-
-
-    if (atoi(token) != semicolonsym)
-        printError(26);
-
-    getToken();
-
-}
 
 void evaluateCondition()
 {
@@ -410,6 +292,39 @@ void evaluateCondition()
 
 }
 
+void evaluateExpression()
+{
+    int addop;
+
+    if ((atoi(token) == plussym) || (atoi(token) == minussym)){
+
+        addop = atoi(token);
+
+        getToken();
+        term();
+
+        if (addop == minussym)
+            emit(OPR, 0, OPR_NEG);
+    }
+
+    else{
+        term();
+    }
+
+    while ((atoi(token) == plussym) || (atoi(token) == minussym)){
+
+        addop = atoi(token);
+        getToken();
+        term();
+
+        if (addop == plussym)
+            emit(OPR, 0, OPR_ADD);
+        else{
+            emit(OPR, 0, OPR_SUB);
+        }
+    }
+}
+
 void statement()
 {
     int symbolPosition;
@@ -418,7 +333,7 @@ void statement()
 
     int ctemp;
 
-    printf("hi\n" );
+
 
     if (atoi(token) == identsym){
 
@@ -457,7 +372,6 @@ void statement()
     else if (atoi(token) == beginsym){
 
         getToken();
-        printf("%s\n", token );
         statement();
         
 
@@ -518,6 +432,95 @@ void statement()
 
 }
 
+void varDeclaration()
+{
+
+
+    char varName[12];
+
+    do{
+
+        getToken();
+
+        if (atoi(token) != identsym)
+            printError(4);
+
+        getToken();
+
+        strcpy(varName, token);
+
+        if (!find(varName))
+            addToSymbolTable(VARIABLE, varName, 0);
+
+        else
+            printError(28);
+
+        getToken();
+
+
+
+    }while(atoi(token) == commasym);
+
+
+
+    if (atoi(token) != semicolonsym)
+        printError(26);
+
+    getToken();
+
+}
+
+//Declares a constant
+void constDeclaration()
+{
+
+    char constName[12];
+
+    int value;
+
+    do{
+        getToken();
+
+        if (atoi(token) != identsym)
+            printError(4);
+
+        getToken();
+
+        strcpy(constName, token);
+
+        getToken();
+
+        if (atoi(token) != eqsym)
+            printError(3);
+
+        getToken();
+
+        if (atoi(token) != numbersym)
+            printError(2);
+
+        getToken();
+
+        value = atoi(token);
+
+        if (!find(constName))
+            addToSymbolTable(CONSTANT, constName, value);
+
+        else{
+
+            printError(28);
+        }
+
+
+        getToken();
+
+    }while(atoi(token) == commasym);
+
+    if (atoi(token) != semicolonsym)
+        printError(26);
+
+    getToken();
+}
+
 void block(FILE *ofp, FILE *ofp2)
 {
 
@@ -530,9 +533,6 @@ void block(FILE *ofp, FILE *ofp2)
     //If Token = procedure
 
     statement();
-
-
-
 }
 
 
@@ -562,10 +562,6 @@ int main(int argc, char *argv[])
 
     codeCount = 1;
 
-
-
-
-
 	 //Checks to see if the number of arguments is correct
     if (argc > 2){
 
@@ -588,8 +584,6 @@ int main(int argc, char *argv[])
 
             printf("Invalid argument: %s \nArgument number: %d\n", argv[i], i );
             exit(1);
-
-
         }
 
     }
