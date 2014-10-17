@@ -418,6 +418,8 @@ void statement()
 
     int ctemp;
 
+    printf("hi\n" );
+
     if (atoi(token) == identsym){
 
         //Gets the identifier name
@@ -455,14 +457,17 @@ void statement()
     else if (atoi(token) == beginsym){
 
         getToken();
+        printf("%s\n", token );
         statement();
+        
 
         while (atoi(token) == semicolonsym){
             getToken();
             statement();
+            
         }
 
-        //printf("%s\n", token );
+        printf("%s\n", token );
 
         if (atoi(token) != endsym)
             printError(27);
