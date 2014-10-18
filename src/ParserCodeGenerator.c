@@ -61,7 +61,7 @@ void printCodeTable()
 {
     int i;
 
-    for (i = 0; i < codeCount; i++){
+    for (i = 1; i < codeCount; i++){
 
         fprintf(ofp, "%d %d %d\n", code[i].op , code[i].l , code[i].m);
         fprintf(ofp2, "%d %d %d\n", code[i].op , code[i].l , code[i].m);
@@ -236,7 +236,7 @@ void factor()
             emit(LOD, symbolLevel(symbolPosition) -1 , symbolAddress(symbolPosition));
 
         else if (symbolType(symbolPosition) == CONSTANT)
-            emit(LIT, symbolLevel(symbolPosition), symbolAddress(symbolPosition));
+            emit(LIT, 0, symbolTable[symbolPosition].val);
 
         else {
             printError(24);
@@ -279,6 +279,8 @@ void evaluateCondition()
 
         getToken();
         evaluateExpression();
+
+        emit(OPR, 0, OPR_ODD);
 
     }
 
@@ -667,7 +669,7 @@ int main(int argc, char *argv[])
 
     symbolTableCount = 1;
 
-    codeCount = 0;
+    codeCount = 1;
 
 	 //Checks to see if the number of arguments is correct
     if (argc > 2){
