@@ -461,7 +461,7 @@ void statement()
 
         statement();
 
-        code[ctemp].m = codeCount + 1;
+        code[ctemp].m = codeCount;
     }
 
     else if (atoi(token) == whilesym){
@@ -480,7 +480,7 @@ void statement()
         statement();
 
         emit(JMP, 0, cx1);
-        code[cx2].m = codeCount + 1;
+        code[cx2].m = codeCount;
 
     }
 
@@ -517,22 +517,7 @@ void statement()
 
         getToken();
 
-        if (atoi(token) != identsym)
-            printError(4);
-
-        getToken();
-
-        symbolPosition = find(token);
-
-        if (symbolPosition == 0)
-            printError(11);
-
-        if (symbolType(symbolPosition) == VARIABLE)
-            emit(LOD, symbolLevel(symbolPosition) -1 , symbolAddress(symbolPosition));
-        
-        else
-            emit(LIT, 0, symbolTable[symbolPosition].val);
-
+        evaluateExpression();
 
         emit(SIO, 0, 1);
 
