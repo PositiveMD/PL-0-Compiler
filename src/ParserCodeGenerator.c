@@ -61,7 +61,7 @@ void printCodeTable()
 {
     int i;
 
-    for (i = 1; i < codeCount; i++){
+    for (i = 0; i < codeCount; i++){
 
         fprintf(ofp, "%d %d %d\n", code[i].op , code[i].l , code[i].m);
         fprintf(ofp2, "%d %d %d\n", code[i].op , code[i].l , code[i].m);
@@ -190,13 +190,14 @@ void addToSymbolTable(int type, char *identifier, int param){
     symbolTable[symbolTableCount].kind = type;
     strcpy(symbolTable[symbolTableCount].name, identifier);
 
-    if (type == 1)
+
+    if (type == CONSTANT)
         symbolTable[symbolTableCount].val = param;
 
     else {
-        symbolTable[symbolTableCount].addr = symbolTableCount;
-        symbolTable[symbolTableCount].level = 1;
         varCount++;
+        symbolTable[symbolTableCount].addr = varCount;
+        symbolTable[symbolTableCount].level = 1;
     }
 
     symbolTableCount++;
@@ -421,8 +422,6 @@ void statement()
 
     else if (atoi(token) == beginsym){
 
-        emit(INC, 0, ++varCount);
-
         getToken();
         statement();
 
@@ -462,7 +461,7 @@ void statement()
 
         statement();
 
-        code[ctemp].m = codeCount;
+        code[ctemp].m = codeCount + 1;
     }
 
     else if (atoi(token) == whilesym){
@@ -481,7 +480,7 @@ void statement()
         statement();
 
         emit(JMP, 0, cx1);
-        code[cx2].m = codeCount;
+        code[cx2].m = codeCount + 1;
 
     }
 
@@ -642,6 +641,9 @@ void block()
     if (atoi(token) == varsym)
         varDeclaration();
 
+    emit(INC, 0, ++varCount);
+
+
     //If Token = procedure
 
     statement();
@@ -674,7 +676,7 @@ int main(int argc, char *argv[])
 
     symbolTableCount = 1;
 
-    codeCount = 1;
+    codeCount = 0;
     varCount = 0;
 
 	 //Checks to see if the number of arguments is correct

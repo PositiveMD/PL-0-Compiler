@@ -289,7 +289,7 @@ void execute()
             break;
         default:
             printf("Something went wrong with the execution function\n");
-            printf("%d",IR.op);
+            printf("%d,%d,%d",IR.op, IR.l, IR.m);
             exit(1);
     }
 }
