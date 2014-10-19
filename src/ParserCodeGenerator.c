@@ -640,7 +640,7 @@ void convertToMCode()
 
     getToken();
 
-    block(ofp, ofp2);
+    block();
 
     if (atoi(token) != periodsym)
         printError(9);

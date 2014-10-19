@@ -105,8 +105,8 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex)
 
                 if (count > MAX_IDENT_LENGTH){
 
-                    printf("The name is too long");
-                    exit (0);
+                    printf("Error: The name is too long\n");
+                    exit(1);
                 }
 
             //Runs the loops while the input is alphanumeric
@@ -291,8 +291,8 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex)
 
                 if (count > MAX_NUM_LENGTH){
 
-                    printf("The number is too long");
-                    exit(0);
+                    printf("Error: The number is too long\n");
+                    exit(1);
                 }
 
                 //Adds the character to the value
@@ -304,8 +304,8 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex)
             //Is there is a letter after the digits, it's an illegal variable
             if (isalpha(temp)){
 
-                printf("Variable does not start with letter: %d", value);
-                exit(0);
+                printf("Error: Variable does not start with letter -  %d\n", value);
+                exit(1);
             }
 
             //Otherwise, just print the number out
@@ -508,7 +508,7 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex)
             else {
 
                 printf("Error: We do not recognize this symbol. Did you mean to put := ?");
-                exit(0);
+                exit(1);
             }
 
         }
@@ -518,7 +518,7 @@ void convertToToken(FILE *ifp, FILE *ofp2, FILE *ofp3, FILE *ofp4, int printLex)
 
         else {
             printf("Error: Invalid Symbol %c", (char)temp);
-            exit(0);
+            exit(1);
         }
 
 
