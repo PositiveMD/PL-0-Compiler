@@ -196,6 +196,7 @@ void addToSymbolTable(int type, char *identifier, int param){
     else {
         symbolTable[symbolTableCount].addr = symbolTableCount;
         symbolTable[symbolTableCount].level = 1;
+        varCount++;
     }
 
     symbolTableCount++;
@@ -419,6 +420,8 @@ void statement()
     //else if (TOKEN = call)
 
     else if (atoi(token) == beginsym){
+
+        emit(INC, 0, ++varCount);
 
         getToken();
         statement();
@@ -655,6 +658,8 @@ void convertToMCode()
     if (atoi(token) != periodsym)
         printError(9);
 
+    emit(SIO3, 0, 3);
+
     printf("No errors, program is syntactially correct.\n");
 
 }
@@ -670,6 +675,7 @@ int main(int argc, char *argv[])
     symbolTableCount = 1;
 
     codeCount = 1;
+    varCount = 0;
 
 	 //Checks to see if the number of arguments is correct
     if (argc > 2){

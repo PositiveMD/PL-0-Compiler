@@ -62,6 +62,7 @@ static FILE *ifp, *ofp, *ofp2;
 static int printPars;
 static int codeCount;
 static instruction code[MAX_CODE_LENGTH];
+static int varCount;
 
 int symbolAddress(int symbolPosition);
 
