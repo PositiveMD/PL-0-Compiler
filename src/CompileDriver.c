@@ -93,7 +93,7 @@ int main(int argc, char *argv[]){
             continueExecution = (printPars == 1) ? system("./ParserCodeGenerator -a") : system("./ParserCodeGenerator");
 
         if (!continueExecution)
-            continueExecution = (printStack == 1) ? system("./P-Machine -v") : system("P-Machine");
+            continueExecution = (printStack == 1) ? system("./P-Machine -v") : system("./P-Machine");
     }
 	   
 
