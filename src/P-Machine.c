@@ -132,13 +132,8 @@ void OPRFinder()
         default:
             printf("Something broke in the OPR finder");
             exit(1);
-
-
-
     }
-
 }
-
 
 //Returns the string version of the opcode
 const char * opcodeFinder(int opcode)
@@ -187,8 +182,6 @@ const char * opcodeFinder(int opcode)
         default:
             printf("Something broke, you should not get here");
             exit(1);
-
-
     }
 }
 
@@ -298,18 +291,11 @@ void execute()
             printf("Something went wrong with the execution function\n");
             printf("%d,%d,%d",IR.op, IR.l, IR.m);
             exit(1);
-
-
-
     }
-
 }
-
-
 
 int main(int argc, char *argv[])
 {
-
     int printStack = 0;
 
     int i = 0;
@@ -336,16 +322,11 @@ int main(int argc, char *argv[])
 
             printf("Invalid argument: %s \nArgument number: %d\n", argv[i], i );
             exit(1);
-
-
         }
-
     }
 
-    
-
     i = 0;
-  
+
     //Program ends when HALT is false
     HALT = 1;
 
@@ -374,7 +355,6 @@ int main(int argc, char *argv[])
             break;
 
         i++;
-
     }
 
     i = 0;
@@ -383,16 +363,14 @@ int main(int argc, char *argv[])
 
     length = i;
 
-    fprintf(ofp, "line\tOP\tL\tM\n");
-    fprintf(ofp2, "line\tOP\tL\tM\n");
-
-    
+    fprintf(ofp, "Line\tOP\tL\tM\n");
+    fprintf(ofp2, "Line\tOP\tL\tM\n");
 
     if (printStack)
-        printf("line\tOP\tL\tM\n");
+        printf("Line\tOP\tL\tM\n");
 
     for (i = 0; i < length; i++){
-        
+
         fprintf(ofp, "%d\t%s\t%d\t%d\n", i, opcodeFinder(code[i].op), code[i].l, code[i].m);
         fprintf(ofp2, "%d\t%s\t%d\t%d\n", i, opcodeFinder(code[i].op), code[i].l, code[i].m );
 
@@ -413,7 +391,6 @@ int main(int argc, char *argv[])
         printf("Initial values\t\t\t%d\t%d\t%d\n", PC, BP, SP );
     }
 
-
     //We close the file now that we are done using it
     fclose(ifp);
 
@@ -422,20 +399,16 @@ int main(int argc, char *argv[])
     memset(bar,0,sizeof(int)*MAX_STACK_HEIGHT);
 
 
-    //THe Program runs while the base pointer is not equal to 0 and the Halt flag is true
+    //The Program runs while the base pointer is not equal to 0 and the Halt flag is true
     while(BP!=0 && HALT){
 
         fetch();
         execute();
         outputStack(ofp, ofp2, printStack);
-     
     }
-
-
 
     fclose(ofp);
     fclose(ofp2);
 
     return 0;
-  
 }
