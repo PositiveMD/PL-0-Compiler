@@ -8,3 +8,4 @@
 *.txt
 test
 /testcases
+/src/tiny-PL0-compiler

@@ -92,92 +92,92 @@ void printError(int errorCode)
     switch(errorCode){
 
         case 1:
-            printf("Use = instead of :=.");
+            printf("Use = instead of :=.\n");
             exit(1);
         case 2:
-            printf("= must be followed by a number.");
+            printf("= must be followed by a number.\n");
             exit(1);
         case 3:
-            printf("Identifier must be followed by =.");
+            printf("Identifier must be followed by =.\n");
             exit(1);
         case 4:
-            printf("const, var, procedure must be followed by identifier.");
+            printf("const, var, procedure must be followed by identifier.\n");
             exit(1);
         case 5:
-            printf("Semicolon or comma missing.");
+            printf("Semicolon or comma missing.\n");
             exit(1);
         case 6:
-            printf("Incorrect sumbol after procedure declaration.");
+            printf("Incorrect sumbol after procedure declaration.\n");
             exit(1);
         case 7:
-            printf("Statement expected.");
+            printf("Statement expected.\n");
             exit(1);
         case 8:
-            printf("Incorrect symbol after statement part in block.");
+            printf("Incorrect symbol after statement part in block.\n");
             exit(1);
         case 9:
-            printf("Period expected.");
+            printf("Period expected.\n");
             exit(1);
         case 10:
-            printf("Semicolon between statements missing.");
+            printf("Semicolon between statements missing.\n");
             exit(1);
         case 11:
-            printf("Undeclared identifier.");
+            printf("Undeclared identifier.\n");
             exit(1);
         case 12:
-            printf("Assignment to constant or procedure is not allowed.");
+            printf("Assignment to constant or procedure is not allowed.\n");
             exit(1);
         case 13:
-            printf("Assignment operator expected.");
+            printf("Assignment operator expected.\n");
             exit(1);
         case 14:
-            printf("call must be followed by an identifier.");
+            printf("call must be followed by an identifier.\n");
             exit(1);
         case 15:
-            printf("Call of a constant or variable is meaningless.");
+            printf("Call of a constant or variable is meaningless.\n");
             exit(1);
         case 16:
-            printf("then expected.");
+            printf("then expected.\n");
             exit(1);
         case 17:
-            printf("Semicolon or } expected.");
+            printf("Semicolon or } expected.\n");
             exit(1);
         case 18:
-            printf("do expected.");
+            printf("do expected.\n");
             exit(1);
         case 19:
-            printf("Incorrect symbol following statement.");
+            printf("Incorrect symbol following statement.\n");
             exit(1);
         case 20:
-            printf("Relational operator expected.");
+            printf("Relational operator expected.\n");
             exit(1);
         case 21:
-            printf("Expression must not contain a procedure identifier.");
+            printf("Expression must not contain a procedure identifier.\n");
             exit(1);
         case 22:
-            printf("Right parenthesis missing.");
+            printf("Right parenthesis missing.\n");
             exit(1);
         case 23:
-            printf("The preceding factor cannot begin with this symbol.");
+            printf("The preceding factor cannot begin with this symbol.\n");
             exit(1);
         case 24:
-            printf("The expression cannot begin with this symbol.");
+            printf("The expression cannot begin with this symbol.\n");
             exit(1);
         case 25:
-            printf("This number is too large.");
+            printf("This number is too large.\n");
             exit(1);
         case 26:
-            printf("Declaration must end with ;");
+            printf("Declaration must end with ;\n");
             exit(1);
         case 27:
-            printf("begin must be closed with end");
+            printf("begin must be closed with end\n");
             exit(1);
         case 28:
-            printf("This identifier has already been declared in the symbol table");
+            printf("This identifier has already been declared in the symbol table\n");
             exit(1);
 
         default:
-            printf("Something broke in the error printer: %d ", errorCode);
+            printf("Something broke in the error printer: %d \n", errorCode);
             exit(1);
 
     }
