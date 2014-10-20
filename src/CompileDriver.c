@@ -96,23 +96,5 @@ int main(int argc, char *argv[]){
             continueExecution = (printStack == 1) ? system("./P-Machine -v") : system("./P-Machine");
     }
 	   
-
-    
-      
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     return 0;
 }
