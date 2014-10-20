@@ -648,6 +648,7 @@ void convertToMCode()
     emit(SIO3, 0, 3);
 
     printf("No errors, program is syntactially correct.\n");
+    fprintf(ofp2, "No errors, program is syntactially correct.\n\n");
 
 }
 
