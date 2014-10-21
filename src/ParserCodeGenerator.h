@@ -62,7 +62,7 @@ static FILE *ifp, *ofp, *ofp2;
 static int printPars;
 static int codeCount;
 static instruction code[MAX_CODE_LENGTH];
-static int varCount;
+static int currLevel;
 
 int symbolAddress(int symbolPosition);
 
@@ -88,7 +88,7 @@ void evaluateExpression();
 
 void factor();
 
-void varDeclaration();
+int varDeclaration();
 
 void evaluateCondition();
 
@@ -97,3 +97,5 @@ void statement();
 void block();
 
 void convertToMCode();
+
+void procDeclaration();

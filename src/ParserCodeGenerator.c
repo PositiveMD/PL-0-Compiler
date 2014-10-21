@@ -195,9 +195,8 @@ void addToSymbolTable(int type, char *identifier, int param){
         symbolTable[symbolTableCount].val = param;
 
     else {
-        varCount++;
-        symbolTable[symbolTableCount].addr = varCount;
-        symbolTable[symbolTableCount].level = 1;
+        symbolTable[symbolTableCount].addr = param;
+        symbolTable[symbolTableCount].level = currLevel;
     }
 
     symbolTableCount++;
@@ -235,7 +234,7 @@ void factor()
             printError(11);
 
         if (symbolType(symbolPosition) == VARIABLE)
-            emit(LOD, symbolLevel(symbolPosition) -1 , symbolAddress(symbolPosition));
+            emit(LOD, currLevel - symbolLevel(symbolPosition), symbolAddress(symbolPosition));
 
         else if (symbolType(symbolPosition) == CONSTANT)
             emit(LIT, 0, symbolTable[symbolPosition].val);
@@ -415,7 +414,7 @@ void statement()
 
         evaluateExpression();
 
-        emit(STO, symbolLevel(symbolPosition) -1, symbolAddress(symbolPosition));
+        emit(STO, currLevel - symbolLevel(symbolPosition), symbolAddress(symbolPosition));
     }
 
     //else if (TOKEN = call)
@@ -506,7 +505,7 @@ void statement()
         emit(SIO2, 0, 2);
 
         //Stores the value
-        emit(STO, symbolLevel(symbolPosition) -1, symbolAddress(symbolPosition));
+        emit(STO, currLevel - symbolLevel(symbolPosition), symbolAddress(symbolPosition));
 
         getToken();
 
@@ -528,9 +527,14 @@ void statement()
 
 }
 
-void varDeclaration()
+void procDeclaration()
 {
 
+}
+
+int varDeclaration()
+{
+	int varCount = 0;
 
     char varName[12];
 
@@ -545,8 +549,13 @@ void varDeclaration()
 
         strcpy(varName, token);
 
-        if (!find(varName))
-            addToSymbolTable(VARIABLE, varName, 0);
+        if (!find(varName)){
+
+        	varCount++;
+            addToSymbolTable(VARIABLE, varName, varCount);
+
+            
+        }
 
         else
             printError(28);
@@ -563,6 +572,8 @@ void varDeclaration()
         printError(26);
 
     getToken();
+
+    return varCount;
 
 }
 
@@ -619,19 +630,30 @@ void constDeclaration()
 
 void block()
 {
+	currLevel++;
 
+	int spaceToAllocate = 4;
+	int jmpaddr = codeCount;
+	emit(JMP,0 ,0);
+	
     if (atoi(token) == constsym)
         constDeclaration();
 
     if (atoi(token) == varsym)
-        varDeclaration();
+        spaceToAllocate += varDeclaration();
 
-    emit(INC, 0, ++varCount);
+    if (atoi(token) == procsym)
+    	procDeclaration();
 
+    code[jmpaddr].m = codeCount + 1;
 
-    //If Token = procedure
+    emit(INC, 0, spaceToAllocate);
 
     statement();
+
+    emit(RTN, 0, 0);
+
+    currLevel--;
 }
 
 
@@ -663,7 +685,7 @@ int main(int argc, char *argv[])
     symbolTableCount = 1;
 
     codeCount = 0;
-    varCount = 0;
+    currLevel = -1;
 
 	 //Checks to see if the number of arguments is correct
     if (argc > 2){
