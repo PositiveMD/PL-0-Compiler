@@ -172,9 +172,6 @@ void printError(int errorCode)
         case 27:
             printf("begin must be closed with end\n");
             exit(1);
-        case 28:
-            printf("This identifier has already been declared in the symbol table\n");
-            exit(1);
 
         default:
             printf("Something broke in the error printer: %d \n", errorCode);
@@ -573,16 +570,8 @@ int varDeclaration()
 
         strcpy(varName, token);
 
-        if (!find(varName)){
-
-        	varCount++;
-            addToSymbolTable(VARIABLE, varName, varCount);
-
-            
-        }
-
-        else
-            printError(28);
+        varCount++;
+        addToSymbolTable(VARIABLE, varName, varCount);
 
         getToken();
 
@@ -633,14 +622,7 @@ void constDeclaration()
 
         value = atoi(token);
 
-        if (!find(constName))
-            addToSymbolTable(CONSTANT, constName, value);
-
-        else{
-
-            printError(28);
-        }
-
+        addToSymbolTable(CONSTANT, constName, value);
 
         getToken();
 
