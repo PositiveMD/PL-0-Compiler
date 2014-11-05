@@ -107,7 +107,7 @@ void printError(int errorCode)
             printf("Semicolon or comma missing.\n");
             exit(1);
         case 6:
-            printf("Incorrect sumbol after procedure declaration.\n");
+            printf("Incorrect symbol after procedure declaration.\n");
             exit(1);
         case 7:
             printf("Statement expected.\n");
@@ -417,7 +417,31 @@ void statement()
         emit(STO, currLevel - symbolLevel(symbolPosition), symbolAddress(symbolPosition));
     }
 
-    //else if (TOKEN = call)
+    else if (atoi(token) == callsym){
+
+        getToken();
+
+        //We are expecting an identifier
+        if (atoi(token) != identsym)
+            printError(14);
+
+        getToken();
+
+        symbolPosition = find(token);
+
+        //0 indicates that the identifier does not exist in the symbol table
+        if (atoi(token) == 0)
+            printError(11);
+
+        //You're only allowed to call procedures
+        if (symbolType(symbolPosition) != PROCEDURE)
+            printError(15);
+
+        emit(CAL, currLevel - symbolLevel(symbolPosition), symbolAddress(symbolPosition));
+
+        getToken();
+
+    }
 
     else if (atoi(token) == beginsym){
 
@@ -651,7 +675,7 @@ void block()
 
     statement();
 
-    emit(RTN, 0, 0);
+    emit(OPR, 0, OPR_RET);
 
     currLevel--;
 }
