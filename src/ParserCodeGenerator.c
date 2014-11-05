@@ -550,6 +550,33 @@ void statement()
 
 void procDeclaration()
 {
+    char procName[12];
+
+    getToken();
+
+    //Expected an identifier symbol after procedure declaration
+    if (atoi(token) != identsym)
+        printError(4);
+
+    getToken();
+
+    strcpy(procName, token);
+
+    addToSymbolTable(PROCEDURE, procName, codeCount + 1);
+
+    getToken();
+
+    if (atoi(token) != semicolonsym)
+        printError(5);
+
+    getToken();
+
+    block();
+
+    if (atoi(token) != semicolonsym)
+        printError(5);
+
+    getToken();
 
 }
 
@@ -673,7 +700,7 @@ void convertToMCode()
     if (atoi(token) != periodsym)
         printError(9);
 
-    emit(SIO3, 0, 3);
+    //emit(SIO3, 0, 3);
 
     printf("No errors, program is syntactially correct.\n");
     fprintf(ofp2, "No errors, program is syntactially correct.\n\n");
