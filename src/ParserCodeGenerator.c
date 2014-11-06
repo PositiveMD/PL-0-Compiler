@@ -180,6 +180,24 @@ void printError(int errorCode)
     }
 }
 
+//Removes symbols no longer in scope
+void scopeCleanup()
+{
+    int count = 0;
+    int tempSymbolTableCount = symbolTableCount;
+
+    while (symbolTable[tempSymbolTableCount].level == currLevel){
+
+        count++;
+        tempSymbolTableCount--;
+    }
+
+    symbolTableCount -= count;
+
+
+
+}
+
 
 //Adds a new value to the symbol table
 void addToSymbolTable(int type, char *identifier, int param){
@@ -577,6 +595,8 @@ void procDeclaration()
         printError(5);
 
     getToken();
+
+    scopeCleanup();
 
 }
 
