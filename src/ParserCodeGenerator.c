@@ -117,6 +117,7 @@ void printError(int errorCode)
             exit(1);
         case 9:
             printf("Period expected.\n");
+            printf("%s\n",token );
             exit(1);
         case 10:
             printf("Semicolon between statements missing.\n");
@@ -171,6 +172,7 @@ void printError(int errorCode)
             exit(1);
         case 27:
             printf("begin must be closed with end\n");
+            printf("%s\n",token);
             exit(1);
 
         default:
@@ -475,7 +477,7 @@ void statement()
 
         }
 
-       // printf("%s\n", token );
+      //printf("%s\n", token );
 
         if (atoi(token) != endsym)
             printError(27);
@@ -571,7 +573,7 @@ void statement()
 
         emit(SIO, 0, 1);
 
-        getToken();
+        //getToken();
 
     }
 
