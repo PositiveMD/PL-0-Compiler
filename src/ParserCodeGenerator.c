@@ -500,6 +500,18 @@ void statement()
         statement();
 
         code[ctemp].m = codeCount;
+
+        if (atoi(token) == elsesym){
+
+            ctemp = codeCount;
+            emit(JMP, 0 ,0);
+            statement();
+
+            code[ctemp].m = codeCount;
+
+        }
+
+        
     }
 
     else if (atoi(token) == whilesym){
