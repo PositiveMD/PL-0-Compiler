@@ -8,6 +8,8 @@
 #define MAX_TOKEN_SIZE 12
 #define MAX_CODE_LENGTH 500
 
+#define STO_CONSTANT 3
+
 /*
 Constants must store kind, name, and value
 

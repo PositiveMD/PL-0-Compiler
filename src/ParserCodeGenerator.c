@@ -469,7 +469,7 @@ void statement()
             atoi(token) == writesym || atoi(token) == readsym){
 
             if (atoi(token) == semicolonsym)
-            getToken();
+                getToken();
 
             statement();
 
@@ -630,7 +630,7 @@ int varDeclaration()
         strcpy(varName, token);
 
         varCount++;
-        addToSymbolTable(VARIABLE, varName, varCount);
+        addToSymbolTable(VARIABLE, varName, varCount + STO_CONSTANT);
 
         getToken();
 
@@ -710,7 +710,7 @@ void block()
     if (atoi(token) == procsym)
     	procDeclaration();
 
-    code[jmpaddr].m = codeCount + 1;
+    code[jmpaddr].m = codeCount;
 
     emit(INC, 0, spaceToAllocate);
 
