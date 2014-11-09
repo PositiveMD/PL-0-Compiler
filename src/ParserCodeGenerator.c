@@ -584,33 +584,37 @@ void procDeclaration()
 {
     char procName[12];
 
-    getToken();
+    while(atoi(token) == procsym){
 
-    //Expected an identifier symbol after procedure declaration
-    if (atoi(token) != identsym)
-        printError(4);
+        getToken();
 
-    getToken();
+        //Expected an identifier symbol after procedure declaration
+        if (atoi(token) != identsym)
+            printError(4);
 
-    strcpy(procName, token);
+        getToken();
 
-    addToSymbolTable(PROCEDURE, procName, codeCount + 1);
+        strcpy(procName, token);
 
-    getToken();
+        addToSymbolTable(PROCEDURE, procName, codeCount + 1);
 
-    if (atoi(token) != semicolonsym)
-        printError(5);
+        getToken();
 
-    getToken();
+        if (atoi(token) != semicolonsym)
+            printError(5);
 
-    block();
+        getToken();
 
-    if (atoi(token) != semicolonsym)
-        printError(5);
+        block();
 
-    getToken();
+        if (atoi(token) != semicolonsym)
+            printError(5);
+
+        getToken();
+    }
 
     scopeCleanup();
+
 
 }
 
