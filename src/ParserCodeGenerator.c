@@ -6,6 +6,8 @@ COP 3402 : System Software
 
 #include "ParserCodeGenerator.h"
 
+#define DEBUG 1
+
 
 
 int symbolAddress(int symbolPosition)
@@ -83,11 +85,30 @@ void getToken()
 
 }
 
+void printSymbolTable()
+{
+
+    int i;
+
+    for (i = 1; i < symbolTableCount; i++){
+
+        printf("%s ", symbolTable[i].name);
+    }
+
+}
+
 void printError(int errorCode)
 {
 
-    printf("Error %d: ", errorCode);
+    if (DEBUG) {
+        printSymbolTable();
 
+    }
+
+
+    printf("\nError %d: ", errorCode);
+
+ 
     //Prints the error based on the error code, then exits the program
     switch(errorCode){
 
@@ -124,6 +145,7 @@ void printError(int errorCode)
             exit(1);
         case 11:
             printf("Undeclared identifier.\n");
+            printf("Token is: %s\n",token );
             exit(1);
         case 12:
             printf("Assignment to constant or procedure is not allowed.\n");
@@ -186,7 +208,7 @@ void printError(int errorCode)
 void scopeCleanup()
 {
     int count = 0;
-    int tempSymbolTableCount = symbolTableCount;
+    int tempSymbolTableCount = symbolTableCount - 1;
 
     while (symbolTable[tempSymbolTableCount].level == currLevel){
 
@@ -247,8 +269,10 @@ void factor()
         getToken();
         symbolPosition = find(token);
 
-        if (symbolPosition == 0)
+        if (symbolPosition == 0){
+            printf("Error from Factor\n");
             printError(11);
+        }
 
         if (symbolType(symbolPosition) == VARIABLE)
             emit(LOD, currLevel - symbolLevel(symbolPosition), symbolAddress(symbolPosition));
@@ -409,8 +433,10 @@ void statement()
 
         symbolPosition = find(token);
 
-        if (symbolPosition == 0)
+        if (symbolPosition == 0){
+            printf("Error from statement\n");
             printError(11);
+        }
 
         if (symbolType(symbolPosition) != VARIABLE)
             printError(12);
@@ -447,8 +473,10 @@ void statement()
         symbolPosition = find(token);
 
         //0 indicates that the identifier does not exist in the symbol table
-        if (atoi(token) == 0)
+        if (symbolPosition == 0){
+            printf("Error from call\n");
             printError(11);
+        }
 
         //You're only allowed to call procedures
         if (symbolType(symbolPosition) != PROCEDURE)
@@ -505,6 +533,9 @@ void statement()
 
         if (atoi(token) == elsesym){
 
+            code[ctemp].m++;
+
+            getToken();
             ctemp = codeCount;
             emit(JMP, 0 ,0);
             statement();
@@ -548,8 +579,10 @@ void statement()
 
         symbolPosition = find(token);
 
-        if (symbolPosition == 0)
+        if (symbolPosition == 0){
+            printf("Error from read\n");
             printError(11);
+        }
 
         if (symbolType(symbolPosition) != VARIABLE)
             printError(12);
@@ -613,7 +646,7 @@ void procDeclaration()
         getToken();
     }
 
-    scopeCleanup();
+    
 
 
 }
@@ -704,6 +737,7 @@ void block()
 	currLevel++;
 
 	int spaceToAllocate = 4;
+    int oldSymbolTableCount = symbolTableCount;
 	int jmpaddr = codeCount;
 	emit(JMP,0 ,0);
 	
@@ -724,6 +758,7 @@ void block()
 
     emit(OPR, 0, OPR_RET);
 
+    symbolTableCount = oldSymbolTableCount;
     currLevel--;
 }
 
