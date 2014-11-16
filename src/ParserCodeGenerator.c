@@ -629,7 +629,7 @@ void procDeclaration()
 
         strcpy(procName, token);
 
-        addToSymbolTable(PROCEDURE, procName, codeCount + 1);
+        addToSymbolTable(PROCEDURE, procName, codeCount);
 
         getToken();
 
