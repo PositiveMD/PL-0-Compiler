@@ -138,14 +138,16 @@ void printError(int errorCode)
             exit(1);
         case 9:
             printf("Period expected.\n");
-            printf("%s\n",token );
+            if (DEBUG)
+                printf("%s\n",token );
             exit(1);
         case 10:
             printf("Semicolon between statements missing.\n");
             exit(1);
         case 11:
             printf("Undeclared identifier.\n");
-            printf("Token is: %s\n",token );
+            if (DEBUG)
+                printf("Token is: %s\n",token );
             exit(1);
         case 12:
             printf("Assignment to constant or procedure is not allowed.\n");
@@ -194,7 +196,8 @@ void printError(int errorCode)
             exit(1);
         case 27:
             printf("begin must be closed with end\n");
-            printf("%s\n",token);
+            if (DEBUG)
+                printf("%s\n",token);
             exit(1);
 
         default:
@@ -219,8 +222,6 @@ void scopeCleanup()
 
     symbolTableCount -= count;
 
-
-
 }
 
 
@@ -242,6 +243,7 @@ void addToSymbolTable(int type, char *identifier, int param){
     symbolTableCount++;
 }
 
+//Parses for multiplication and division symbols
 void term()
 {
     int mulop;
@@ -278,6 +280,7 @@ void factor()
 
         prospectiveLevel = currLevel - symbolLevel(symbolPosition);
 
+        //Ensures that the L value is never lower than 0
         if (symbolType(symbolPosition) == VARIABLE)
             emit(LOD, (prospectiveLevel >= 0 ? prospectiveLevel : 0) , symbolAddress(symbolPosition));
 
@@ -657,10 +660,6 @@ void procDeclaration()
 
         getToken();
     }
-
-    
-
-
 }
 
 int varDeclaration()
