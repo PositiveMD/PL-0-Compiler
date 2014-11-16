@@ -63,6 +63,7 @@ void OPRFinder()
         //Ret
         case 0:
             SP = BP -1;
+            bar[SP + 1] = 0;
             PC = stack[SP + 4];
             BP = stack[SP + 3];
             break;
