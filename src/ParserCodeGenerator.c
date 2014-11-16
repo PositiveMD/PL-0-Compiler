@@ -6,7 +6,7 @@ COP 3402 : System Software
 
 #include "ParserCodeGenerator.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 
 
