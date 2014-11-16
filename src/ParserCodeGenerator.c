@@ -205,6 +205,7 @@ void printError(int errorCode)
 }
 
 //Removes symbols no longer in scope
+//This function is no longer needed
 void scopeCleanup()
 {
     int count = 0;
@@ -263,6 +264,7 @@ void term()
 void factor()
 {
     int symbolPosition;
+    int prospectiveLevel;
 
     if (atoi(token) == identsym){
 
@@ -274,8 +276,10 @@ void factor()
             printError(11);
         }
 
+        prospectiveLevel = currLevel - symbolLevel(symbolPosition);
+
         if (symbolType(symbolPosition) == VARIABLE)
-            emit(LOD, currLevel - symbolLevel(symbolPosition), symbolAddress(symbolPosition));
+            emit(LOD, (prospectiveLevel >= 0 ? prospectiveLevel : 0) , symbolAddress(symbolPosition));
 
         else if (symbolType(symbolPosition) == CONSTANT)
             emit(LIT, 0, symbolTable[symbolPosition].val);
@@ -426,6 +430,8 @@ void statement()
 
     int ctemp;
 
+    int prospectiveLevel;
+
     if (atoi(token) == identsym){
 
         //Gets the identifier name
@@ -457,7 +463,9 @@ void statement()
 
         evaluateExpression();
 
-        emit(STO, currLevel - symbolLevel(symbolPosition), symbolAddress(symbolPosition));
+        prospectiveLevel = currLevel - symbolLevel(symbolPosition);
+
+        emit(STO, (prospectiveLevel >= 0 ? prospectiveLevel : 0), symbolAddress(symbolPosition));
     }
 
     else if (atoi(token) == callsym){
@@ -482,7 +490,9 @@ void statement()
         if (symbolType(symbolPosition) != PROCEDURE)
             printError(15);
 
-        emit(CAL, currLevel - symbolLevel(symbolPosition), symbolAddress(symbolPosition));
+        prospectiveLevel = currLevel - symbolLevel(symbolPosition);
+
+        emit(CAL, (prospectiveLevel >= 0 ? prospectiveLevel : 0), symbolAddress(symbolPosition));
 
         getToken();
 
@@ -590,8 +600,10 @@ void statement()
         //SIO: reads input from user and stores at the top of the stack
         emit(SIO2, 0, 2);
 
+        prospectiveLevel = currLevel - symbolLevel(symbolPosition);
+
         //Stores the value
-        emit(STO, currLevel - symbolLevel(symbolPosition), symbolAddress(symbolPosition));
+        emit(STO, (prospectiveLevel >= 0 ? prospectiveLevel : 0), symbolAddress(symbolPosition));
 
         getToken();
 
